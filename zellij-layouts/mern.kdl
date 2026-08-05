@@ -1,0 +1,20 @@
+layout {
+    tab name="mern-dev" {
+        pane split_direction="vertical" {
+            pane name="vscode" command="code" {
+                args "."
+            }
+            pane name="opencode" command="opencode" {
+                args "-m" "ollama/llama2-uncensored" "."
+            }
+        }
+    }
+    tab name="db" {
+        pane name="mongo" command="docker" {
+            args "compose" "up" "mongo"
+        }
+    }
+    tab name="hermes" {
+        pane name="hermes" command="hermes"
+    }
+}

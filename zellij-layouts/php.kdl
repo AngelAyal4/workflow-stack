@@ -1,0 +1,16 @@
+layout {
+    tab name="php-dev" {
+        pane split_direction="vertical" {
+            pane name="vscode" command="code" {
+                args "."
+            }
+            pane split_direction="horizontal" {
+                pane name="opencode" command="opencode"
+                pane name="terminal" command="bash"
+            }
+        }
+    }
+    tab name="hermes" {
+        pane name="hermes" command="hermes"
+    }
+}

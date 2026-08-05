@@ -1,0 +1,31 @@
+# ===== SECRETOS — nunca subir =====
+.env
+.envrc
+*.key
+*.pem
+*token*
+token*
+ghp_*
+gho_*
+
+# ===== Basura de sistema =====
+.DS_Store
+*.swp
+*~
+backup.*.tar.gz
+
+# ===== Copias de respaldo =====
+*.backup.*
+*.backup*/
+
+# ===== Node / build =====
+node_modules/
+dist/
+.astro/
+__pycache__/
+
+# ===== No subir configs con secretos del usuario =====
+# (los configs base se generan en setup, no se versionan)
+# mantiene el repo genérico y sin datos de esa persona
+**/opencode.json
+**/config.yaml
