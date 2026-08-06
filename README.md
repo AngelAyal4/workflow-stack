@@ -129,8 +129,73 @@ workflow-stack/
 ├── prompts/               # plantillas de prompts Orquestador/Ejecutor (OpenCode)
 │   ├── orquestador.md     #   → agente plan (razona, descompone, NO escribe código)
 │   └── ejecutor.md        #   → agente build (implementa el plan archivo por archivo)
+├── spec-kit/              # Spec Driven Development — Constitution + Specify
+│   ├── constitution.md    #   → reglas inmutables del proyecto (autoridad superior)
+│   └── specify.md         #   → plantilla de feature spec (qué y por qué, no cómo)
 └── obsidian-templates/    # plantillas del vault
 ```
+
+---
+
+## 🏗️ Spec Driven Development (SDD)
+
+Este flujo integra **Spec Kit** (GitHub) con el workflow existente. SDD significa que escribís una **especificación ANTES** de escribir código — la spec es la fuente de verdad para el humano y la IA.
+
+### El flujo SDD integrado
+
+```
+Constitution → Specify → Plan → Tasks → Implement
+   (1)           (2)       (3)     (4)        (5)
+```
+
+| Fase | Qué hace | Quién | Herramienta |
+|------|----------|-------|-------------|
+| **1. Constitution** | Define reglas inmutables del proyecto (arquitectura, stack, estándares, seguridad, calidad UI) | Humano (aprobar) | `spec-kit/constitution.md` |
+| **2. Specify** | Describe el feature: problema, solución, usuarios, flujos, requisitos, criterio de aceptación | Humano + IA (borrador) | `spec-kit/specify.md` |
+| **3. Plan** | Convierte la spec en plan técnico por fases (READ-ONLY) | IA (modelo potente) | `prompts/orquestador.md` |
+| **4. Tasks** | Divide en tareas implementables y testables | IA | `prompts/ejecutor.md` |
+| **5. Implement** | Ejecuta tarea por tarea con validación | IA (modelo eficiente) | `prompts/ejecutor.md` |
+
+### Cómo se usa
+
+```bash
+# 1. Crear proyecto (incluye Constitution + Specify templates)
+ws mern taskboard
+
+# 2. Constitution: definir reglas inmutables (una sola vez)
+#    Editar spec-kit/constitution.md con el stack y principios
+
+# 3. Specify: para cada feature nueva
+#    Crear spec desde template: cp spec-kit/specify.md specs/<feature>.md
+#    Completar: problema, usuarios, flujos, requisitos
+
+# 4. Plan: pasar la spec al orquestador (OpenCode con modelo potente)
+#    → genera el plan técnico por fases
+
+# 5. Implement: pasar el plan al ejecutor (OpenCode con modelo eficiente)
+#    → ejecuta tarea por tarea
+
+# 6. Review: verificar que la implementación cumple la spec
+```
+
+### Dónde van los artefactos
+
+```
+<proyecto>/
+├── constitution.md          # copia de spec-kit/constitution.md (customizada)
+├── specs/
+│   ├── feature-auth.md      # spec del feature de auth
+│   └── feature-tasks.md     # spec del feature de tareas
+├── memory/                  # memoria del proyecto (tipo Anthropic)
+└── ...
+```
+
+### Integración con herramientas existentes
+
+- **OpenCode**: orquestador (plan) + ejecutor (implement) con LLMs distintos
+- **Hermes**: aplica `app-quality-gates` (código limpio, a11y, responsive, seguridad)
+- **Obsidian**: specs y plans como notas vinculadas al proyecto
+- **Git**: cada feature = una spec + un branch corto
 
 ---
 

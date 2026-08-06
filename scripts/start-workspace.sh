@@ -229,6 +229,11 @@ EOF
                     printf '# MEMORY.md — Indice de memoria del proyecto\n\n(Un archivo por tema en memory/, cada entrada: `- [Title](file.md) — hook` <150 chars)\n' > "$PROJECT_PATH/memory/MEMORY.md"
                 fi
         
+                # Spec Driven Development: constitution + specs
+        mkdir -p "$PROJECT_PATH/specs"
+        cp ~/workflow-stack/spec-kit/constitution.md "$PROJECT_PATH/constitution.md"
+        cp ~/workflow-stack/spec-kit/specify.md "$PROJECT_PATH/specs/_template.md"
+        
                 echo "export PROJECT_NAME=\\\"$PROJECT_NAME\\\"" > "$PROJECT_PATH/.envrc"
         echo "export PROJECT_TYPE=\"$PROJECT_TYPE\"" >> "$PROJECT_PATH/.envrc"
         echo "export OPENAI_API_KEY=\"not-needed-local\"" >> "$PROJECT_PATH/.envrc"
