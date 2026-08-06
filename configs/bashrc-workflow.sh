@@ -5,7 +5,10 @@
 # ============================================================
 
 # === WORKSPACE ===
-alias ws='~/scripts/start-workspace.sh'
+# ws abre UNA TERMINAL NUEVA EN PANTALLA COMPLETA con el workspace tmux adentro
+ws() {
+    gnome-terminal --full-screen -- bash -c 'exec ~/scripts/start-workspace.sh "$@"' _ "$@"
+}
 alias backup-vault='~/scripts/backup-obsidian.sh'
 alias obs='obsidian ~/obsidian-vault &'
 
