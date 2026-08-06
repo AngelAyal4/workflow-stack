@@ -252,7 +252,13 @@ else
     echo "⚠️ OpenCode Desktop no instalado (opencode-desktop-linux-amd64.deb). Solo se abre el CLI en Zellij."
 fi
 
-# 7. Iniciar Zellij
+# 7. Previo a Zellij: matar opencode CLI huerfano y obsidian colgado (evita camarones de raw mode)
+pkill -9 -u "$USER" -f "opencode -m" 2>/dev/null
+pkill -9 -u "$USER" -x opencode 2>/dev/null
+sync
+# zellij: el --layout crea sesion nueva; los servers EXITED viejos no estorban.
+
+# 8. Iniciar Zellij
 echo "Iniciando workspace $PROJECT_TYPE/$PROJECT_NAME..."
 zellij --layout "$PROJECT_TYPE"
 
