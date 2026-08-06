@@ -57,6 +57,37 @@ priority: <% tp.system.suggester("Prioridad", ["Urgente", "Alta", "Media", "Baja
 - /dist/**
 - /coverage/**
 - .env, .env.* (secretos reales)
+
+## Memoria del Proyecto (sistema tipo Anthropic)
+
+Al aprender algo del usuario, del proyecto o del trabajo, guardarlo en `memory/` del proyecto, un archivo por tema (kebab-case), con frontmatter:
+
+```markdown
+---
+name: <slug-kebab-case>
+description: <una linea — usada para decidir relevancia, se especifica>
+metadata:
+  type: user | feedback | project | reference
+---
+
+<contenido: para feedback/project: regla/hecho, luego **Why:** (por que — incidente o preferencia) y **How to apply:** (cuando/cuando aplica)>
+```
+
+Tipos:
+- `user` — rol, objetivos, conocimiento, preferencias del usuario en este proyecto
+- `feedback` — correcciones ("no, no asi") Y confirmaciones ("sí, perfecto"); guardar de ambos. Con **Why:** y **How to apply:**
+- `project` — decisiones, metas, bugs, incidentes (estado: "quien hace que, por que, para cuando"). Convertir fechas relativas a absolutas ("jueves" → 2026-08-06)
+- `reference` — punteros a recursos externos (repos, API docs, tableros, canales)
+
+NO guardar en memoria: patrones de codigo/estructura (se derivan del codigo), git history (autoritativo), recetas de debugging (el fix esta en el codigo + commit), estado efimero de la tarea actual.
+
+Reglas:
+- MEMORY.md es un INDICE (lineas < 150 chars: `- [Title](file.md) — hook`), nunca contenido directo
+- Confirmar el contenido del indice < 200 lineas
+- Actualizar/eliminar memorias viejas o erradas; sin duplicados (actualizar el existente primero)
+- "La memoria dice que X existe" ≠ "X existe ahora" — si la memoria nombra archivos/funciones, verificar con el codigo actual antes de recomendar
+- Fechas del usuario → absolutas. Secuencia → orden de prioridad.
+- Datos sensibles (SSN, cuentas, salud, direccion personal, secretos/tokens) NO se guardan salvo pedido explicito
 ```
 
 ## Notas

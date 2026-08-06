@@ -223,7 +223,13 @@ EOF
         
         cp "$VAULT_PATH/02-Templates/Proyecto Template.md" "$PROJECT_PATH/AGENTS.md"
         
-        echo "export PROJECT_NAME=\"$PROJECT_NAME\"" > "$PROJECT_PATH/.envrc"
+                # Sistema de memoria del proyecto (tipo Anthropic): carpeta + indice
+                mkdir -p "$PROJECT_PATH/memory"
+                if [ ! -f "$PROJECT_PATH/memory/MEMORY.md" ]; then
+                    printf '# MEMORY.md — Indice de memoria del proyecto\n\n(Un archivo por tema en memory/, cada entrada: `- [Title](file.md) — hook` <150 chars)\n' > "$PROJECT_PATH/memory/MEMORY.md"
+                fi
+        
+                echo "export PROJECT_NAME=\\\"$PROJECT_NAME\\\"" > "$PROJECT_PATH/.envrc"
         echo "export PROJECT_TYPE=\"$PROJECT_TYPE\"" >> "$PROJECT_PATH/.envrc"
         echo "export OPENAI_API_KEY=\"not-needed-local\"" >> "$PROJECT_PATH/.envrc"
         echo "export OPENCODE_MODEL=\"llama2-uncensored\"" >> "$PROJECT_PATH/.envrc"

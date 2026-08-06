@@ -70,7 +70,11 @@ ws astro mi-blog        # stack Astro + WordPress Headless
 - `.envrc` con variables de proyecto (direnv)
 - Notas en Obsidian: `01-Projects/<stack>/<proyecto>/` → Tareas, Criterios, Logs
 - `docker-compose.yml` (DB o WordPress) y lo levanta
+- `AGENTS.md` con reglas de calidad (código limpio, a11y, responsive, seguridad, anti-secretos)
+- `memory/` + `MEMORY.md` — sistema de memoria del proyecto (tipo Anthropic: user/feedback/project/reference)
 - Abre **VS Code + OpenCode + terminal + Hermes** en tmux, y **OpenCode Desktop** (GUI) aparte
+
+> Los prompts de Orquestador/Ejecutor con modelos distintos están en `prompts/` (ver arriba) — se generan automáticamente con los datos del proyecto en el flujo v2.
 
 ### Comandos útiles
 | Comando | Acción |
