@@ -15,6 +15,24 @@ if [ -z "$PROJECT_TYPE" ] || [ -z "$PROJECT_NAME" ]; then
     exit 1
 fi
 
+# 0. Limpiar servers Zellij huerfanos (adoptados por systemd = sin terminal viva).
+#    Evita el raw mode / cascada de numeros / mouse-reporting roto al abrir uno nuevo.
+cleanup_stale_zellij() {
+    local pid ppid ppcmd
+    for pid in $(pgrep -f "zellij --server" 2>/dev/null); do
+        ppid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
+        ppcmd=$(ps -o cmd= -p "$ppid" 2>/dev/null | head -c 30)
+        case "$ppcmd" in
+            *systemd*|*init*)
+                kill -9 "$pid" 2>/dev/null
+                echo "  ✓ server Zellij huerfano eliminado (PID $pid)"
+                ;;
+        esac
+    done
+    sleep 1
+}
+cleanup_stale_zellij
+
 PROJECT_PATH="$HOME/workspace/projects/$PROJECT_TYPE/$PROJECT_NAME"
 VAULT_PATH="$HOME/obsidian-vault"
 
