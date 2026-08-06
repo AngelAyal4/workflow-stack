@@ -15,20 +15,21 @@ if [ -z "$PROJECT_TYPE" ] || [ -z "$PROJECT_NAME" ]; then
     exit 1
 fi
 
-# 0. Limpiar servers Zellij huerfanos (adoptados por systemd = sin terminal viva).
-#    Evita el raw mode / cascada de numeros / mouse-reporting roto al abrir uno nuevo.
+# 0. Purgar estado Zellij viejo.
+#    Bug conocido zellij 0.44.3 (#5261/#5440): servers/sockets huerfanos acumulados
+#    hacen que un cliente nuevo sea expulsado ("1000 consecutive unknown messages")
+#    dejando la terminal en raw mode (cascada de numeros).
+#    REGLA: solo se purga si la terminal es FRESCA (fuera de zellij/tmux).
+#    Si ya estas dentro de zellij, no se toca nada (evita matar la propia sesion).
 cleanup_stale_zellij() {
-    local pid ppid ppcmd
-    for pid in $(pgrep -f "zellij --server" 2>/dev/null); do
-        ppid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
-        ppcmd=$(ps -o cmd= -p "$ppid" 2>/dev/null | head -c 30)
-        case "$ppcmd" in
-            *systemd*|*init*)
-                kill -9 "$pid" 2>/dev/null
-                echo "  ✓ server Zellij huerfano eliminado (PID $pid)"
-                ;;
-        esac
-    done
+    if [ -n "$ZELLIJ_SESSION_NAME" ] || [ -n "$STY" ]; then
+        echo "  ℹ️  Detectado zellij/tmux activo: sin purga (modo seguro)"
+        return
+    fi
+    echo "  ✓ Terminal limpia: purgando servers Zellij viejos..."
+    zellij delete-all-sessions 2>/dev/null          # limpia las sesiones EXITED
+    pkill -9 -x zellij 2>/dev/null                  # mata servers fantasma restantes
+    rm -rf "/run/user/$(id -u)/zellij" 2>/dev/null  # borra sockets huerfanos colgados
     sleep 1
 }
 cleanup_stale_zellij
@@ -246,8 +247,12 @@ EOF
     fi
 fi
 
-# 2. Abrir Obsidian
-obsidian "$VAULT_PATH" &
+# 2. Abrir Obsidian (solo si no esta ya corriendo — si esta abierto, el 2do lanzamiento queda colgado esperando lock)
+if pgrep -x obsidian >/dev/null 2>&1; then
+    echo "Obsidian ya esta abierto. Saltando (evita lock colgado)."
+else
+    obsidian "$VAULT_PATH" &
+fi
 
 # 3. Navegar al proyecto
 cd "$PROJECT_PATH" || exit
