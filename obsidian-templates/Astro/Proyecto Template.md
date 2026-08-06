@@ -59,6 +59,15 @@ priority: <% tp.system.suggester("Prioridad", ["Urgente", "Alta", "Media", "Baja
 - /dist/
 - /node_modules/
 - /src/content/frontmatter autogenerato
+
+## Reglas de Calidad (obligatorias, ver skill app-quality-gates)
+1. Codigo limpio: nombres auto-explicativos, funciones <30 lineas, sin codigo muerto
+2. Accesible: HTML semantico, labels en formularios, alt en imagenes, focus visible
+3. Responsive: mobile-first, unidades rem/%, probar en 320/768/1280px, sin overflow
+4. Seguridad: validar TODO input server-side, parametrizar SQL, escapar output (anti-XSS)
+5. JAMAS hardcodear secretos: tokens/keys/passwords solo via variables de entorno (.env gitignored)
+6. .env.example versionado con placeholders; .env y .env.local gitignored
+7. Sin headers inseguros (CSP, X-Frame-Options) ni dependencias con CVEs (npm audit)
 ```
 
 ## Notas

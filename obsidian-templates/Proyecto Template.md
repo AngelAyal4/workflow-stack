@@ -41,6 +41,13 @@ priority: <% tp.system.suggester("Prioridad", ["Urgente", "Alta", "Media", "Baja
 1. Simplicidad primero
 2. Cambios quirurgicos
 3. Tests antes que codigo nuevo
+4. Codigo limpio: nombres auto-explicativos, funciones <30 lineas, sin codigo muerto
+5. Accesible: HTML semantico, labels en formularios, alt en imagenes, focus visible
+6. Responsive: mobile-first, unidades rem/%, probar en 320/768/1280px, sin overflow
+7. Seguridad: validar TODO input server-side, parametrizar SQL, escapar output (anti-XSS)
+8. JAMAS hardcodear secretos: tokens/keys/passwords solo via variables de entorno (.env gitignored)
+9. .env.example versionado con placeholders; .env y .env.local gitignored
+10. Sin headers inseguros (CSP, X-Frame-Options) ni dependencias con CVEs (npm audit)
 
 ## Comandos
 - `npm run dev`
@@ -49,6 +56,7 @@ priority: <% tp.system.suggester("Prioridad", ["Urgente", "Alta", "Media", "Baja
 ## No editar
 - /dist/**
 - /coverage/**
+- .env, .env.* (secretos reales)
 ```
 
 ## Notas
