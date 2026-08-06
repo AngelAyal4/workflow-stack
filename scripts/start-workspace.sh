@@ -299,22 +299,12 @@ case "$PROJECT_TYPE" in
     astro) DB_KIND="wp" ;;
 esac
 
-# Ventana 1: desarrollo (vscode + opencode [+ terminal en los stacks con 3 panes])
+# Ventana 1: desarrollo (todo el stack: terminal | opencode a 50/50)
+# VS Code abre como app GUI aparte; aca no se ocupa otra columna.
 tmux new-session -d -s "$SESSION" -c "$PROJECT_PATH" -n "$PROJECT_TYPE-dev"
 tmux send-keys -t "$SESSION:1.1" "code ." C-m
-tmux split-window -h -t "$SESSION:1.1"            # pane 1.2 a la derecha
-if [ "$PROJECT_TYPE" = "mern" ]; then
-    # mern: opencode ocupa el ancho principal, vscode columna lateral de 40
-    tmux send-keys -t "$SESSION:1.2" "$OPENCMD" C-m
-    tmux resize-pane -t "$SESSION:1.1" -x 40
-else
-    # php/pern/python/astro: vscode (40) | opencode (arriba, amplio) / terminal (10)
-    tmux split-window -v -t "$SESSION:1.2"        # pane 1.3 abajo a la derecha
-    tmux send-keys -t "$SESSION:1.2" "$OPENCMD" C-m
-    tmux send-keys -t "$SESSION:1.3" "bash" C-m
-    tmux resize-pane -t "$SESSION:1.1" -x 40
-    tmux resize-pane -t "$SESSION:1.3" -y 10
-fi
+tmux split-window -h -t "$SESSION:1.1"            # pane 1.2 a la derecha (50/50)
+tmux send-keys -t "$SESSION:1.2" "$OPENCMD" C-m
 
 # Ventana 2: base de datos (si aplica)
 if [ -n "$DB_KIND" ]; then
