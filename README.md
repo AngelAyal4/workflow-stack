@@ -1,6 +1,6 @@
 # 🚀 Workflow Stack — Entorno de Desarrollo Full-Stack Compartido
 
-Bootstrap reproducible para el entorno de desarrollo del equipo: **Ubuntu + Zellij + VS Code + OpenCode + Hermes + Obsidian + direnv + Ollama + Docker**.
+Bootstrap reproducible para el entorno de desarrollo del equipo: **Ubuntu + tmux + VS Code + OpenCode + Hermes + Obsidian + direnv + Ollama + Docker**.
 
 > Cloná → ejecutá → tenés el mismo workflow que el resto del equipo. Incluye 5 stacks de proyectos listos para usar.
 
@@ -27,11 +27,11 @@ El script instala y configura **automáticamente**:
 
 | # | Componente | Qué hace |
 |---|-----------|----------|
-| 1 | Paquetes base | git, curl, fzf, ripgrep, direnv, zellij, docker |
+| 1 | Paquetes base | git, curl, fzf, ripgrep, direnv, tmux, docker |
 | 2 | Node.js LTS | v20 con npm |
 | 3 | Ollama | modelos locales (llama2-uncensored, llama3.1:8b) |
-| 4 | Shell | aliases (`ws`, `obs`, `zj`, `zjl`, `da`, `dr`, `oc`, git) + hook direnv |
-| 5 | Zellij | layouts `php/mern/pern/python/astro.kdl` |
+| 4 | Shell | aliases (`ws`, `obs`, `zj`, `zjl`, `tml`, `tma`, `da`, `dr`, `oc`, git) + hook direnv |
+| 5 | tmux | multiplexor principal; `ws` lanza `ws-<stack>-<proyecto>` (config en `configs/tmux.conf`) |
 | 6 | Scripts | `start-workspace.sh`, `backup-obsidian.sh`, `obsidian-context-bridge.py` |
 | 6b | OpenCode Desktop | detecta la app GUI (se abre con cada proyecto) |
 | 7 | Obsidian | plantillas `02-Templates` (proyecto + por stack) |
@@ -70,14 +70,15 @@ ws astro mi-blog        # stack Astro + WordPress Headless
 - `.envrc` con variables de proyecto (direnv)
 - Notas en Obsidian: `01-Projects/<stack>/<proyecto>/` → Tareas, Criterios, Logs
 - `docker-compose.yml` (DB o WordPress) y lo levanta
-- Abre **VS Code + OpenCode + terminal + Hermes** en Zellij, y **OpenCode Desktop** (GUI) aparte
+- Abre **VS Code + OpenCode + terminal + Hermes** en tmux, y **OpenCode Desktop** (GUI) aparte
 
 ### Comandos útiles
 | Comando | Acción |
 |---------|--------|
-| `ws <stack> <proyecto>` | Crear/abrir workspace |
+| `ws <stack> <proyecto>` | Crear/abrir workspace (lanza tmux) |
 | `obs` | Abrir Obsidian |
-| `zj` / `zjl <stack>` | Zellij / con layout |
+| `zj` / `zjl <stack>` | Zellij (secundario) / con layout |
+| `tml` / `tma <sesión>` | tmux list / attach |
 | `da` / `dr` | direnv allow / reload |
 | `oc` | OpenCode |
 | `gs` `ga` `gc` `gp` `gl` | Git rápido |
@@ -104,7 +105,7 @@ ws astro mi-blog        # stack Astro + WordPress Headless
 
 ## 🤝 Cómo colaborar
 
-1. **Agregar un stack nuevo:** creá el caso en `scripts/start-workspace.sh`, el layout en `zellij-layouts/`, y la plantilla en `obsidian-templates/<stack>/`.
+1. **Agregar un stack nuevo:** creá el caso en `scripts/start-workspace.sh`, y la plantilla en `obsidian-templates/<stack>/`.
 2. **Mejorar el setup:** PR al `setup.sh`.
 3. **Compartir el vault:** mantené `~/obsidian-vault` como repo git aparte (no va en este repo).
 
@@ -118,9 +119,9 @@ workflow-stack/
 ├── configs/               # ejemplos de config (SIN secretos)
 │   ├── bashrc-workflow.sh     # aliases + hooks de shell
 │   ├── opencode.example.json  # config de OpenCode + MCP
-│   └── envrc.example          # variables de proyecto (direnv)
+│   ├── envrc.example          # variables de proyecto (direnv)
+│   └── tmux.conf              # multiplexor principal
 ├── scripts/               # start-workspace, backup, bridge MCP
-├── zellij-layouts/        # layouts .kdl por stack
 └── obsidian-templates/    # plantillas del vault
 ```
 

@@ -272,19 +272,66 @@ if command -v ai.opencode.desktop >/dev/null 2>&1; then
     echo "Abriendo OpenCode Desktop (GUI)..."
     ai.opencode.desktop "$PROJECT_PATH" >/dev/null 2>&1 &
 else
-    echo "⚠️ OpenCode Desktop no instalado (opencode-desktop-linux-amd64.deb). Solo se abre el CLI en Zellij."
+    echo "⚠️ OpenCode Desktop no instalado (opencode-desktop-linux-amd64.deb). Solo se abre el CLI en tmux."
 fi
 
-# 7. Previo a Zellij: matar opencode CLI huerfano y obsidian colgado (evita camarones de raw mode)
+# 7. Previo: matar opencode CLI huerfano (evita procesos zombies)
 pkill -9 -u "$USER" -f "opencode -m" 2>/dev/null
 pkill -9 -u "$USER" -x opencode 2>/dev/null
 sync
-# zellij: el --layout crea sesion nueva; los servers EXITED viejos no estorban.
 
-# 8. Iniciar Zellij
-echo "Iniciando workspace $PROJECT_TYPE/$PROJECT_NAME..."
-zellij --layout "$PROJECT_TYPE"
+# 8. Iniciar workspace en tmux (mas estable que zellij: sin bug de sockets huerfanos)
+echo "Iniciando workspace $PROJECT_TYPE/$PROJECT_NAME en tmux..."
+SESSION="ws-$PROJECT_TYPE-$PROJECT_NAME"
+
+# Limpiar una sesion tmux previa del mismo proyecto (si existe)
+tmux has-session -t "$SESSION" 2>/dev/null && tmux kill-session -t "$SESSION"
+
+# Segun stack: modelo de opencode y ventana de db
+OPENCMD="opencode"
+DB_KIND=""
+case "$PROJECT_TYPE" in
+    mern|astro) OPENCMD="opencode -m ollama/llama2-uncensored ." ;;
+esac
+case "$PROJECT_TYPE" in
+    mern)  DB_KIND="mongo" ;;
+    pern)  DB_KIND="postgres" ;;
+    astro) DB_KIND="wp" ;;
+esac
+
+# Ventana 1: desarrollo (vscode + opencode [+ terminal en los stacks con 3 panes])
+tmux new-session -d -s "$SESSION" -c "$PROJECT_PATH" -n "$PROJECT_TYPE-dev"
+tmux send-keys -t "$SESSION:1.1" "code ." C-m
+tmux split-window -h -t "$SESSION:1.1"            # pane 1.2 a la derecha
+if [ "$PROJECT_TYPE" = "mern" ]; then
+    # mern: vscode | opencode (2 panes, como el layout original)
+    tmux send-keys -t "$SESSION:1.2" "$OPENCMD" C-m
+else
+    # php/pern/python/astro: vscode | (opencode / terminal)
+    tmux split-window -v -t "$SESSION:1.2"        # pane 1.3 abajo a la derecha
+    tmux send-keys -t "$SESSION:1.2" "$OPENCMD" C-m
+    tmux send-keys -t "$SESSION:1.3" "bash" C-m
+fi
+
+# Ventana 2: base de datos (si aplica)
+if [ -n "$DB_KIND" ]; then
+    tmux new-window -t "$SESSION" -n "$DB_KIND"
+    if [ "$PROJECT_TYPE" = "astro" ]; then
+        tmux send-keys -t "$SESSION:$DB_KIND.1" "bash" C-m
+    else
+        tmux send-keys -t "$SESSION:$DB_KIND.1" "docker compose up $DB_KIND" C-m
+    fi
+fi
+
+# Ventana final: hermes
+tmux new-window -t "$SESSION" -n "hermes"
+tmux send-keys -t "$SESSION:hermes.1" "hermes" C-m
+
+# Volver a la ventana de desarrollo y attach
+tmux select-window -t "$SESSION:$PROJECT_TYPE-dev"
+tmux select-pane -t "$SESSION:$PROJECT_TYPE-dev.1"
+tmux attach -t "$SESSION"
 
 echo "Sesion finalizada."
-echo "Recuerda hacer commit:"
-echo "  git add . && git commit -m \"feat: descripcion\" && git push"
+echo "Para volver a entrar: tmux attach -t $SESSION"
+echo "Para listar: tmux ls"

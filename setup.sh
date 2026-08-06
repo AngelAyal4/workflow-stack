@@ -28,14 +28,14 @@ install_system_pkgs() {
     banner "Paquetes base"
     if ! have apt-get; then
         yellow "  ⚠️ No se detectó apt (Debian/Ubuntu/WSL)."
-        yellow "    Instalá manualmente: git, curl, wget, fzf, ripgrep, direnv, zellij, docker."
+        yellow "    Instalá manualmente: git, curl, wget, fzf, ripgrep, direnv, tmux, docker."
         return 0
     fi
     sudo apt-get update -qq
     sudo apt-get install -y -qq \
         git curl wget unzip \
         fzf ripgrep \
-        direnv zellij \
+        direnv tmux \
         docker.io docker-compose-v2
 
     # Permitir a este usuario usar docker sin sudo (efectivo tras re-login)
@@ -125,10 +125,18 @@ setup_gh() {
 
 # ---------- 5. Layouts de Zellij --------------------------------
 setup_zellij_layouts() {
-    banner "Layouts de Zellij"
+    banner "Layouts de Zellij (secundario)"
     mkdir -p "$HOME/.config/zellij/layouts"
     cp "$SCRIPT_DIR/zellij-layouts/"*.kdl "$HOME/.config/zellij/layouts/" 2>/dev/null || true
     green "  ✓ layouts copiados (php mern pern python astro)"
+}
+
+# ---------- 5b. Config de tmux (multiplexor principal) ----------
+setup_tmux() {
+    banner "Config de tmux (multiplexor principal)"
+    mkdir -p "$HOME/.config/tmux"
+    cp "$SCRIPT_DIR/configs/tmux.conf" "$HOME/.config/tmux/tmux.conf" 2>/dev/null || true
+    green "  ✓ tmux.conf listo (prefijo C-a, mouse on)"
 }
 
 # ---------- 6. Scripts propios ---------------------------------
@@ -240,6 +248,7 @@ install_ollama
 setup_shell
 setup_gh
 setup_zellij_layouts
+setup_tmux
 setup_scripts
 setup_opencode_desktop
 setup_obsidian_templates

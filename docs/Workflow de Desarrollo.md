@@ -7,7 +7,7 @@ area: desarrollo
 # Workflow de Desarrollo — Manual de Referencia
 
 > **Qué es:** Pipeline completo para crear y gestionar proyectos full-stack en esta máquina.
-> Cada proyecto se crea desde un **stack definido** (plantilla) y se sincroniza entre el código (`~/workspace`), el segundo cerebro (Obsidian), el multiplexor (Zellij) y las integraciones (direnv, MCP, Docker).
+> Cada proyecto se crea desde un **stack definido** (plantilla) y se sincroniza entre el código (`~/workspace`), el segundo cerebro (Obsidian), el multiplexor (**tmux**) y las integraciones (direnv, MCP, Docker).
 
 ---
 
@@ -30,7 +30,7 @@ Pedís "creame un proyecto X" (Hermes/Telegram)
 │    - estructura + deps        │
 │    - notas Obsidian           │
 │    - .envrc (direnv)          │
-│    - layout Zellij            │
+│    - sesión tmux              │
 │    - docker-compose (si aplica)│
 └─────────────────────────────┘
         │
@@ -46,15 +46,15 @@ Pedís "creame un proyecto X" (Hermes/Telegram)
 
 Un **stack** = plantilla de proyecto con estructura, dependencias y config propias.
 
-| Stack | Layout KDL | Carpeta proyectos | Caso en `start-workspace.sh` |
-|-------|-----------|-------------------|------------------------------|
-| **PHP / WordPress** | `php.kdl` | `~/workspace/projects/php-wordpress/` | `php` |
-| **MERN** | `mern.kdl` | `~/workspace/projects/mern/` | `mern` |
-| **PERN** | `pern.kdl` | `~/workspace/projects/pern/` | `pern` |
-| **Python** | `python.kdl` | `~/workspace/projects/python/` | `python` |
-| **Astro + WP Headless** | `astro.kdl` | `~/workspace/projects/astro/` | `astro` |
+| Stack | Ventanas tmux | Carpeta proyectos | Caso en `start-workspace.sh` |
+|-------|--------------|-------------------|------------------------------|
+| **PHP / WordPress** | `php-dev` (vscode+opencode+term) → `hermes` | `~/workspace/projects/php-wordpress/` | `php` |
+| **MERN** | `mern-dev` (vscode+opencode) → `mongo` → `hermes` | `~/workspace/projects/mern/` | `mern` |
+| **PERN** | `pern-dev` (vscode+opencode+term) → `postgres` → `hermes` | `~/workspace/projects/pern/` | `pern` |
+| **Python** | `python-dev` (vscode+opencode+term) → `hermes` | `~/workspace/projects/python/` | `python` |
+| **Astro + WP Headless** | `astro-dev` (vscode+opencode+term) → `wp` → `hermes` | `~/workspace/projects/astro/` | `astro` |
 
-Cada layout de Zellij abre: **VS Code + OpenCode + terminal** en la misma consola → tab de **DB/WordPress** (si aplica) → tab de **Hermes**. Además, `start-workspace.sh` abre **OpenCode Desktop** (app GUI) con el proyecto cargado, junto al CLI que vive dentro de Zellij.
+Cada sesión de **tmux** abre: **VS Code + OpenCode + terminal** en la misma consola → ventana de **DB/WordPress** (si aplica) → ventana de **Hermes**. Además, `start-workspace.sh` abre **OpenCode Desktop** (app GUI) con el proyecto cargado, junto al CLI que vive dentro de tmux. Config en `~/.config/tmux/tmux.conf` (prefijo `C-a`).
 
 ---
 
@@ -66,8 +66,10 @@ Cargados en `~/.bashrc`:
 # Gestión del workspace
 ws    # ~/scripts/start-workspace.sh <stack> <proyecto>  → crea y abre el entorno
 obs   # obsidian ~/obsidian-vault &                      → abre el vault
-zj    # zellij
+zj    # zellij (secundario)
 zjl   # zellij --layout <stack>
+tml   # tmux ls
+tma   # tmux attach -t <sesión>
 
 # direnv
 da    # direnv allow
@@ -100,7 +102,7 @@ ws mern app-demo
 
 | Script | Ruta | Función |
 |--------|------|---------|
-| **start-workspace** | `~/scripts/start-workspace.sh` | Orquesta todo: crea estructura, copia plantillas, .envrc, direnv, docker-compose y abre Zellij |
+| **start-workspace** | `~/scripts/start-workspace.sh` | Orquesta todo: crea estructura, copia plantillas, .envrc, direnv, docker-compose y abre tmux |
 | **backup-obsidian** | `~/scripts/backup-obsidian.sh` | Backup del vault (rsync + tar.gz), mantiene 10 |
 | **obsidian-context-bridge** | `~/scripts/obsidian-context-bridge.py` | MCP server que expone el vault a OpenCode |
 
@@ -168,7 +170,7 @@ export HERMES_BASE_URL="http://localhost:11434"
          [derivadas según respuestas: stack, DB, APIs, deploy]
 
 → Hermes crea: estructura, dependencias, plantillas,
-  direnv, docker, layout Zellij, notas en Obsidian.
+  direnv, docker, sesión tmux, notas en Obsidian.
 ```
 
 **Ejemplo 2 — Crear MERN manual**

@@ -9,9 +9,12 @@ alias ws='~/scripts/start-workspace.sh'
 alias backup-vault='~/scripts/backup-obsidian.sh'
 alias obs='obsidian ~/obsidian-vault &'
 
-# === ZELLIJ ===
+# ======= ZELLIJ (secundario) / TMUX (principal, mas estable) =======
 alias zj='zellij'
 alias zjl='zellij --layout'
+# tmux es el multiplexor principal (mas estable). ws lanza `ws-<stack>-<proyecto>`
+alias tml='tmux ls'
+alias tma='tmux attach -t'
 alias da='direnv allow'
 alias dr='direnv reload'
 
