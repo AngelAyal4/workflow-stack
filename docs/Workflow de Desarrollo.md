@@ -54,7 +54,7 @@ Un **stack** = plantilla de proyecto con estructura, dependencias y config propi
 | **Python** | `python.kdl` | `~/workspace/projects/python/` | `python` |
 | **Astro + WP Headless** | `astro.kdl` | `~/workspace/projects/astro/` | `astro` |
 
-Cada layout de Zellij abre: **VS Code + OpenCode + terminal** en la misma consola → tab de **DB/WordPress** (si aplica) → tab de **Hermes**.
+Cada layout de Zellij abre: **VS Code + OpenCode + terminal** en la misma consola → tab de **DB/WordPress** (si aplica) → tab de **Hermes**. Además, `start-workspace.sh` abre **OpenCode Desktop** (app GUI) con el proyecto cargado, junto al CLI que vive dentro de Zellij.
 
 ---
 

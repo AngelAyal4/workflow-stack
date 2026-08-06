@@ -244,7 +244,15 @@ if [ -f "docker-compose.yml" ]; then
     docker compose up -d
 fi
 
-# 6. Iniciar Zellij
+# 6. Abrir OpenCode Desktop (GUI) ademas del CLI que entra en Zellij
+if command -v ai.opencode.desktop >/dev/null 2>&1; then
+    echo "Abriendo OpenCode Desktop (GUI)..."
+    ai.opencode.desktop "$PROJECT_PATH" >/dev/null 2>&1 &
+else
+    echo "⚠️ OpenCode Desktop no instalado (opencode-desktop-linux-amd64.deb). Solo se abre el CLI en Zellij."
+fi
+
+# 7. Iniciar Zellij
 echo "Iniciando workspace $PROJECT_TYPE/$PROJECT_NAME..."
 zellij --layout "$PROJECT_TYPE"
 

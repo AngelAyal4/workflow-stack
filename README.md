@@ -33,6 +33,7 @@ El script instala y configura **automáticamente**:
 | 4 | Shell | aliases (`ws`, `obs`, `zj`, `zjl`, `da`, `dr`, `oc`, git) + hook direnv |
 | 5 | Zellij | layouts `php/mern/pern/python/astro.kdl` |
 | 6 | Scripts | `start-workspace.sh`, `backup-obsidian.sh`, `obsidian-context-bridge.py` |
+| 6b | OpenCode Desktop | detecta la app GUI (se abre con cada proyecto) |
 | 7 | Obsidian | plantillas `02-Templates` (proyecto + por stack) |
 | 8 | OpenCode | config base con provider Ollama |
 | 9 | Cron | backup diario del vault a las 02:00 |
@@ -69,7 +70,7 @@ ws astro mi-blog        # stack Astro + WordPress Headless
 - `.envrc` con variables de proyecto (direnv)
 - Notas en Obsidian: `01-Projects/<stack>/<proyecto>/` → Tareas, Criterios, Logs
 - `docker-compose.yml` (DB o WordPress) y lo levanta
-- Abre **VS Code + OpenCode + terminal + Hermes** en Zellij
+- Abre **VS Code + OpenCode + terminal + Hermes** en Zellij, y **OpenCode Desktop** (GUI) aparte
 
 ### Comandos útiles
 | Comando | Acción |

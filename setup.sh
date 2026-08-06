@@ -140,6 +140,17 @@ setup_scripts() {
     green "  ✓ scripts listos"
 }
 
+# ---------- 6b. OpenCode Desktop (GUI) --------------------------
+setup_opencode_desktop() {
+    banner "OpenCode Desktop"
+    if command -v ai.opencode.desktop >/dev/null 2>&1; then
+        green "  ✓ ya instalado ($(ai.opencode.desktop --version 2>/dev/null | grep -o 'version: [0-9.]*' | head -1 || echo 'desconocido'))"
+    else
+        yellow "  ⚠️ No instalado — descargalo en https://opencode.ai/docs/desktop"
+        yellow "     (o el .deb de tu equipo). El script start-workspace lo abre automaticamente."
+    fi
+}
+
 # ---------- 7. Plantillas de Obsidian -------------------------------
 setup_obsidian_templates() {
     banner "Plantillas de Obsidian"
@@ -230,6 +241,7 @@ setup_shell
 setup_gh
 setup_zellij_layouts
 setup_scripts
+setup_opencode_desktop
 setup_obsidian_templates
 setup_opencode
 setup_configs
