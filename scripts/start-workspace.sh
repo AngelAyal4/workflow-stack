@@ -5,10 +5,10 @@ PROJECT_TYPE=$1
 PROJECT_NAME=$2
 
 if [ -z "$PROJECT_TYPE" ] || [ -z "$PROJECT_NAME" ]; then
-    echo "Uso: start-workspace.sh <php|mern|pern|python|astro> <nombre-proyecto>"
+    echo "Uso: start-workspace.sh <php|mern|mern-nextjs|pern|python|astro> <nombre-proyecto>"
     echo ""
     echo "Proyectos existentes:"
-    for stack in php-wordpress mern pern python astro; do
+    for stack in php-wordpress mern mern-nextjs pern python astro; do
         echo "  $stack:"
         ls ~/workspace/projects/$stack 2>/dev/null | sed "s/^/    - /"
     done
@@ -83,6 +83,81 @@ if [ ! -d "$PROJECT_PATH" ]; then
                 echo "      - mongo_data:/data/db" >> docker-compose.yml
                 echo "volumes:" >> docker-compose.yml
                 echo "  mongo_data:" >> docker-compose.yml
+                ;;
+            mern-nextjs)
+                # Crear proyecto Next.js fullstack con App Router
+                npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --no-turbopack --use-npm --yes 2>/dev/null || {
+                    echo "create-next-app fallo, creando estructura manual..."
+                    npm init -y
+                    mkdir -p src/app src/components src/lib src/types src/hooks prisma
+                }
+
+                # Instalar dependencias del backend/API
+                npm install mongoose dotenv bcryptjs jsonwebtoken zod
+                npm install --save-dev @types/bcryptjs @types/jsonwebtoken
+
+                # Instalar Tremor para dashboards/charts
+                npm install @tremor/react recharts
+                npm install --save-dev nodemon
+
+                # Estructura backend (API routes + models + lib)
+                mkdir -p src/app/api/auth src/app/api/transactions src/app/api/categories src/app/api/budgets src/app/api/reports
+                mkdir -p src/models src/lib src/middleware src/types
+
+                # package.json con scripts fullstack
+                node -e "
+                const fs = require('fs');
+                const pkg = JSON.parse(fs.readFileSync('package.json'));
+                pkg.scripts = {
+                    dev: 'next dev',
+                    build: 'next build',
+                    start: 'next start',
+                    lint: 'next lint',
+                    test: 'jest --coverage'
+                };
+                fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+                "
+
+                # .gitignore
+                cat > .gitignore <<'EOF'
+node_modules/
+.next/
+out/
+build/
+.env
+.env.local
+.env.*.local
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+npm-debug.log*
+EOF
+
+                # Docker Compose para MongoDB
+                cat > docker-compose.yml <<'EOF'
+version: "3.8"
+services:
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+volumes:
+  mongo_data:
+EOF
+
+                # .env.example (sin secretos)
+                cat > .env.example <<'EOF'
+# MongoDB
+MONGODB_URI=mongodb://localhost:27017/cashinsightapp
+# JWT Secret (generar con: openssl rand -base64 32)
+JWT_SECRET=your-jwt-secret-here
+# NextAuth (cuando se implemente)
+NEXTAUTH_SECRET=your-nextauth-secret
+NEXTAUTH_URL=http://localhost:3000
+EOF
                 ;;
             pern)
                 mkdir -p client server/{routes,models,controllers,middleware,tests}
@@ -302,10 +377,10 @@ tmux has-session -t "$SESSION" 2>/dev/null && tmux kill-session -t "$SESSION"
 OPENCMD="opencode"
 DB_KIND=""
 case "$PROJECT_TYPE" in
-    mern|astro) OPENCMD="opencode -m ollama/llama2-uncensored ." ;;
+    mern|mern-nextjs|astro) OPENCMD="opencode -m ollama/llama2-uncensored ." ;;
 esac
 case "$PROJECT_TYPE" in
-    mern)  DB_KIND="mongo" ;;
+    mern|mern-nextjs)  DB_KIND="mongo" ;;
     pern)  DB_KIND="postgres" ;;
     astro) DB_KIND="wp" ;;
 esac

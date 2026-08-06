@@ -20,7 +20,7 @@ import shutil
 VAULT_PATH = os.path.expanduser("~/obsidian-vault")
 PROTOCOL_VERSION = "2024-11-05"
 
-STACKS = ["php-wordpress", "mern", "pern", "python", "astro"]
+STACKS = ["php-wordpress", "mern", "mern-nextjs", "pern", "python", "astro"]
 
 # Archivos de contexto que el bridge intenta leer por proyecto.
 # El nombre en disco varía (sin emoji), pero aceptamos variaciones.
