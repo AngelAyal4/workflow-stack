@@ -122,6 +122,9 @@ workflow-stack/
 │   ├── envrc.example          # variables de proyecto (direnv)
 │   └── tmux.conf              # multiplexor principal
 ├── scripts/               # start-workspace, backup, bridge MCP
+├── prompts/               # plantillas de prompts Orquestador/Ejecutor (OpenCode)
+│   ├── orquestador.md     #   → agente plan (razona, descompone, NO escribe código)
+│   └── ejecutor.md        #   → agente build (implementa el plan archivo por archivo)
 └── obsidian-templates/    # plantillas del vault
 ```
 
