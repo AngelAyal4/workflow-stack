@@ -337,7 +337,9 @@ fi
 # Volver a la ventana de desarrollo y attach
 tmux select-window -t "$SESSION:$PROJECT_TYPE-dev"
 tmux select-pane -t "$SESSION:$PROJECT_TYPE-dev.1"
-tmux attach -t "$SESSION"
+# Re-ajusta la ventana al tamano real del terminal antes de plegarse
+tmux resize-window -A 2>/dev/null
+exec tmux attach -t "$SESSION"
 
 echo "Sesion finalizada."
 echo "Para volver a entrar: tmux attach -t $SESSION"
