@@ -48,13 +48,15 @@ Un **stack** = plantilla de proyecto con estructura, dependencias y config propi
 
 | Stack | Ventanas tmux | Carpeta proyectos | Caso en `start-workspace.sh` |
 |-------|--------------|-------------------|------------------------------|
-| **PHP / WordPress** | `php-dev` (vscode+opencode+term) → `hermes` | `~/workspace/projects/php-wordpress/` | `php` |
-| **MERN** | `mern-dev` (vscode+opencode) → `mongo` → `hermes` | `~/workspace/projects/mern/` | `mern` |
-| **PERN** | `pern-dev` (vscode+opencode+term) → `postgres` → `hermes` | `~/workspace/projects/pern/` | `pern` |
-| **Python** | `python-dev` (vscode+opencode+term) → `hermes` | `~/workspace/projects/python/` | `python` |
-| **Astro + WP Headless** | `astro-dev` (vscode+opencode+term) → `wp` → `hermes` | `~/workspace/projects/astro/` | `astro` |
+| **PHP / WordPress** | `php-dev` (vscode+opencode+term) → [`hermes`*] | `~/workspace/projects/php-wordpress/` | `php` |
+| **MERN** | `mern-dev` (vscode+opencode) → `mongo` → [`hermes`*] | `~/workspace/projects/mern/` | `mern` |
+| **PERN** | `pern-dev` (vscode+opencode+term) → `postgres` → [`hermes`*] | `~/workspace/projects/pern/` | `pern` |
+| **Python** | `python-dev` (vscode+opencode+term) → [`hermes`*] | `~/workspace/projects/python/` | `python` |
+| **Astro + WP Headless** | `astro-dev` (vscode+opencode+term) → `wp` → [`hermes`*] | `~/workspace/projects/astro/` | `astro` |
 
-Cada sesión de **tmux** abre: **VS Code + OpenCode + terminal** en la misma consola → ventana de **DB/WordPress** (si aplica) → ventana de **Hermes**. Además, `start-workspace.sh` abre **OpenCode Desktop** (app GUI) con el proyecto cargado, junto al CLI que vive dentro de tmux. Config en `~/.config/tmux/tmux.conf` (prefijo `C-a`).
+> `[hermes*]` = ventana condicional: **no se abre si ya hay una sesión de Hermes activa (24/7)**.
+
+Cada sesión de **tmux** abre: **VS Code + OpenCode + terminal** en la misma consola → ventana de **DB/WordPress** (si aplica) → ventana de **Hermes** (solo si no está corriendo). Además, `start-workspace.sh` abre **OpenCode Desktop** (app GUI) con el proyecto cargado, junto al CLI que vive dentro de tmux. Config en `~/.config/tmux/tmux.conf` (prefijo `C-a`).
 
 ---
 

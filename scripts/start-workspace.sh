@@ -304,13 +304,16 @@ tmux new-session -d -s "$SESSION" -c "$PROJECT_PATH" -n "$PROJECT_TYPE-dev"
 tmux send-keys -t "$SESSION:1.1" "code ." C-m
 tmux split-window -h -t "$SESSION:1.1"            # pane 1.2 a la derecha
 if [ "$PROJECT_TYPE" = "mern" ]; then
-    # mern: vscode | opencode (2 panes, como el layout original)
+    # mern: opencode ocupa el ancho principal, vscode columna lateral de 40
     tmux send-keys -t "$SESSION:1.2" "$OPENCMD" C-m
+    tmux resize-pane -t "$SESSION:1.1" -x 40
 else
-    # php/pern/python/astro: vscode | (opencode / terminal)
+    # php/pern/python/astro: vscode (40) | opencode (arriba, amplio) / terminal (10)
     tmux split-window -v -t "$SESSION:1.2"        # pane 1.3 abajo a la derecha
     tmux send-keys -t "$SESSION:1.2" "$OPENCMD" C-m
     tmux send-keys -t "$SESSION:1.3" "bash" C-m
+    tmux resize-pane -t "$SESSION:1.1" -x 40
+    tmux resize-pane -t "$SESSION:1.3" -y 10
 fi
 
 # Ventana 2: base de datos (si aplica)
@@ -323,9 +326,13 @@ if [ -n "$DB_KIND" ]; then
     fi
 fi
 
-# Ventana final: hermes
-tmux new-window -t "$SESSION" -n "hermes"
-tmux send-keys -t "$SESSION:hermes.1" "hermes" C-m
+# Ventana final: hermes — SOLO si no hay una sesion de Hermes ya activa (24/7)
+if pgrep -f "hermes_cli.main" >/dev/null 2>&1 || pgrep -x hermes >/dev/null 2>&1; then
+    echo "  ℹ️  Hermes ya esta corriendo (24/7). No abro ventana duplicada."
+else
+    tmux new-window -t "$SESSION" -n "hermes"
+    tmux send-keys -t "$SESSION:hermes.1" "hermes" C-m
+fi
 
 # Volver a la ventana de desarrollo y attach
 tmux select-window -t "$SESSION:$PROJECT_TYPE-dev"
