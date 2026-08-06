@@ -5,10 +5,7 @@
 # ============================================================
 
 # === WORKSPACE ===
-# ws abre UNA TERMINAL NUEVA en vista maximizada (con botones min/rest/cerrar)
-ws() {
-    gnome-terminal --maximize -- bash -c 'exec ~/scripts/start-workspace.sh "$@"' _ "$@"
-}
+alias ws='~/scripts/start-workspace.sh'
 alias backup-vault='~/scripts/backup-obsidian.sh'
 alias obs='obsidian ~/obsidian-vault &'
 
