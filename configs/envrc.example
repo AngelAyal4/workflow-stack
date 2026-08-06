@@ -1,0 +1,19 @@
+# ============================================================
+#  envrc.example — Plantilla de ~/.envrc por proyecto (direnv)
+#  Pasa a un archivo .envrc dentro de cada proyecto.
+#  El setup.sh de cada stack la genera automáticamente.
+# ============================================================
+
+export PROJECT_NAME="mi-proyecto"
+export PROJECT_TYPE="mern"   # php | mern | pern | python | astro
+
+# --- Modelos locales (Ollama) ---
+export OPENAI_API_KEY="not-needed-local"
+export OPENCODE_MODEL="llama2-uncensored"
+export OPENCODE_BASE_URL="http://localhost:11434"
+export HERMES_MODEL="llama2-uncensored:latest"
+export HERMES_PROVIDER="ollama"
+export HERMES_BASE_URL="http://localhost:11434"
+
+# --- Supongo todas las variables reales (API keys, DB) acá, gitignored ---
+# export MY_API_KEY="secret..."

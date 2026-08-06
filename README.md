@@ -111,10 +111,16 @@ ws astro mi-blog        # stack Astro + WordPress Headless
 ```
 workflow-stack/
 ├── setup.sh               # instalador (idempotente)
+├── README.md              # este archivo
+├── docs/
+│   └── Workflow de Desarrollo.md   # documentación completa del workflow
+├── configs/               # ejemplos de config (SIN secretos)
+│   ├── bashrc-workflow.sh     # aliases + hooks de shell
+│   ├── opencode.example.json  # config de OpenCode + MCP
+│   └── envrc.example          # variables de proyecto (direnv)
 ├── scripts/               # start-workspace, backup, bridge MCP
 ├── zellij-layouts/        # layouts .kdl por stack
-├── obsidian-templates/    # plantillas del vault
-└── README.md              # este archivo
+└── obsidian-templates/    # plantillas del vault
 ```
 
 ---

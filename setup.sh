@@ -153,7 +153,11 @@ setup_opencode() {
     banner "Config de OpenCode"
     mkdir -p "$HOME/.config/opencode"
     if [ ! -f "$HOME/.config/opencode/opencode.json" ]; then
-        cat > "$HOME/.config/opencode/opencode.json" <<'EOF'
+        # Usar el ejemplo del repo como base
+        if [ -f "$SCRIPT_DIR/configs/opencode.example.json" ]; then
+            sed "s|~/|$HOME/|g" "$SCRIPT_DIR/configs/opencode.example.json" > "$HOME/.config/opencode/opencode.json"
+        else
+            cat > "$HOME/.config/opencode/opencode.json" <<'EOF'
 {
   "$schema": "https://opencode.ai/config.json",
   "provider": {
@@ -167,10 +171,27 @@ setup_opencode() {
   "mcp": {}
 }
 EOF
-        green "  ✓ opencode.json base generado — agregá tu provider cloud y MCP"
+        fi
+        green "  ✓ opencode.json generado desde el ejemplo (ajustá paths si difieren)"
     else
         yellow "  ⚠️ opencode.json ya existe — no lo toco (completá MCP/cloud si hace falta)"
     fi
+}
+
+# ---------- 8b. Configs de referencia ----------------
+setup_configs() {
+    banner "Configs de referencia"
+    mkdir -p "$HOME/workflow-stack-configs"
+    cp "$SCRIPT_DIR/configs/"* "$HOME/workflow-stack-configs/" 2>/dev/null || true
+    green "  ✓ ejemplos guardados en ~/workflow-stack-configs (bashrc, opencode, envrc)"
+}
+
+# ---------- 8c. Documentación ----------------
+setup_docs() {
+    banner "Documentación"
+    mkdir -p "$HOME/workflow-stack-configs/docs"
+    cp "$SCRIPT_DIR/docs/"* "$HOME/workflow-stack-configs/docs/" 2>/dev/null || true
+    green "  ✓ documentación copiada a ~/workflow-stack-configs/docs"
 }
 
 # ---------- 9. Cron: backup diario del vault -------------------
@@ -211,6 +232,8 @@ setup_zellij_layouts
 setup_scripts
 setup_obsidian_templates
 setup_opencode
+setup_configs
+setup_docs
 setup_cron
 setup_vault
 
