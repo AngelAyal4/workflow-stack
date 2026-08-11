@@ -101,11 +101,23 @@ ws astro mi-blog        # stack Astro + WordPress Headless
 
 ---
 
-## 🔐 Seguridad
+## 🔐 Seguridad — Checklist obligatoria
 
-- **No subir tokens/keys** a este repo. El setup genera configs **sin secretos**.
-- Variables sensibles van en `.env` / `.envrc` locales (gitignored).
-- `opencode.json` ya existente en tu máquina **no se sobreescribe**.
+> Todo proyecto y feature debe cumplir la **`SECURITY-CHECKLIST.md`** (raíz del repo, 10 items).
+> Cada item va **resuelto o `N/A` con justificación**, y se verifica **con evidencia** en la Review de cada feature (flujo SDD).
+
+1. **Rate limiting** — límites por IP + por usuario en endpoints abiertos (`login`, `register`, `forgot`, `reset`) y protección en edge (Cloudflare WAF / Vercel). Verificar: ráfaga de requests → `429`.
+2. **API keys y secretos** — rotación periódica, scopes mínimos, secrets manager; jamás en el repo ni en el historial git.
+3. **RLS / autorización** — deny by default: cada ruta privada exige sesión **y** propiedad del recurso (el usuario solo ve/edita lo suyo).
+4. **`.env`** — nunca en el build del cliente; solo runtime injection (env vars / `env_file`); `NEXT_PUBLIC_*` únicamente para valores públicos.
+5. **Inputs** — validar TODO server-side (Zod/Joi), sanitizar output (anti-XSS), proteger contra SQLi/NoSQLi (ORM + queries parametrizadas).
+6. **Base de datos** — sin acceso público (bind `127.0.0.1` / IP allowlist) y roles separados `read` / `readWrite` / `admin`.
+7. **Auth** — JWT con expiración corta + refresh (o cookie httpOnly con rotación), middleware en **TODAS** las rutas privadas, protección CSRF en mutaciones.
+8. **Errores** — logs internos detallados; al usuario solo errores **genéricos** (sin stack, driver de DB ni internals).
+9. **Admin / debug** — eliminar en prod o proteger con **IP allowlist + 2FA**.
+10. **Logging + monitoreo** — logging centralizado con alertas (Sentry/Datadog) y detección de anomalías (ráfagas de `5xx`, `429`, logins fallidos).
+
+**Integración con el flujo SDD:** Specify (§4 enumera los items aplicables) → Plan (orquestador) → Implement (ejecutor) → Review (verificación con evidencia). Los comandos de verificación están en `SECURITY-CHECKLIST.md`.
 
 ---
 
@@ -120,6 +132,7 @@ ws astro mi-blog        # stack Astro + WordPress Headless
 workflow-stack/
 ├── setup.sh               # instalador (idempotente)
 ├── README.md              # este archivo
+├── SECURITY-CHECKLIST.md  # checklist de seguridad obligatoria (10 items, ver §Seguridad)
 ├── docs/
 │   └── Workflow de Desarrollo.md   # documentación completa del workflow
 ├── configs/               # ejemplos de config (SIN secretos)
