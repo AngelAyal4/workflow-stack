@@ -48,6 +48,7 @@ priority: <% tp.system.suggester("Prioridad", ["Urgente", "Alta", "Media", "Baja
 8. JAMAS hardcodear secretos: tokens/keys/passwords solo via variables de entorno (.env gitignored)
 9. .env.example versionado con placeholders; .env y .env.local gitignored
 10. Sin headers inseguros (CSP, X-Frame-Options) ni dependencias con CVEs (npm audit)
+11. Seguridad: seguir la SECURITY-CHECKLIST.md del workflow-stack — rate limiting en endpoints públicos, errores genéricos al usuario, logging de anomalías, DB sin acceso público
 
 ## Comandos
 - `npm run dev`

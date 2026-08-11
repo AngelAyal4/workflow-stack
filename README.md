@@ -4,6 +4,8 @@ Bootstrap reproducible para el entorno de desarrollo del equipo: **Ubuntu + tmux
 
 > Cloná → ejecutá → tenés el mismo workflow que el resto del equipo. Incluye 5 stacks de proyectos listos para usar.
 
+> 🛡️ **`SECURITY-CHECKLIST.md`** — checklist de seguridad **obligatoria** (10 items): se aplica a todo proyecto y se verifica con evidencia en la Review de cada feature.
+
 ---
 
 ## 📋 Requisitos previos

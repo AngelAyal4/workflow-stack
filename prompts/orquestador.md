@@ -47,5 +47,8 @@ Listá los 3-5 archivos más críticos:
 - `path/to/file1.ts`
 - `path/to/file2.ts`
 
+# Seguridad obligatoria
+Cada fase del plan debe contemplar los items de `SECURITY-CHECKLIST.md` (raíz del workflow-stack) que apliquen al feature: rate limiting en endpoints públicos, validación/sanitización de inputs, auth + autorización en rutas privadas, errores genéricos hacia el usuario, secretos solo vía env, DB sin acceso público. Si un item no aplica, anotá `N/A — motivo` en la fase correspondiente.
+
 # Regla
 Nada de implementar. Solo explorar y planear. Sé específico: nombres de archivo y firmas.

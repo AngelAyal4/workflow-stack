@@ -39,7 +39,7 @@ description: "Plantilla para especificar un feature ANTES de planificarlo. Se co
 ## 4. Requisitos No-Funcionales
 
 - **Rendimiento:** {{PERF}} (ej: <200ms p95)
-- **Seguridad:** {{SEC}} (ej: input sanitizado)
+- **Seguridad:** {{SEC}} — enumerar los items de SECURITY-CHECKLIST.md que aplican (ej: rate limiting en login, errores genéricos, secretos solo por env)
 - **Accesibilidad:** {{A11Y}} (ej: WCAG AA)
 - **Responsive:** {{RESPONSIVE}}
 
@@ -53,7 +53,7 @@ description: "Plantilla para especificar un feature ANTES de planificarlo. Se co
 
 - [ ] ¿Viola algún principio de la constitución?
 - [ ] ¿Los estándares de código son respetados?
-- [ ] ¿Los requisitos de seguridad están contemplados?
+- [ ] ¿Los requisitos de seguridad están contemplados? (según SECURITY-CHECKLIST.md)
 - [ ] ¿Es testable?
 
 ## 7. Criterio de Aceptación (Definition of Done)
