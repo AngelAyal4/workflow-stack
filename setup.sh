@@ -170,7 +170,7 @@ setup_obsidian_templates() {
 # ---------- 8 Config opencode (solo generar si falta) ------------
 setup_opencode() {
     banner "Config de OpenCode"
-    mkdir -p "$HOME/.config/opencode"
+    mkdir -p "$HOME/.config/opencode/prompts"
     if [ ! -f "$HOME/.config/opencode/opencode.json" ]; then
         # Usar el ejemplo del repo como base
         if [ -f "$SCRIPT_DIR/configs/opencode.example.json" ]; then
@@ -194,6 +194,11 @@ EOF
         green "  ✓ opencode.json generado desde el ejemplo (ajustá paths si difieren)"
     else
         yellow "  ⚠️ opencode.json ya existe — no lo toco (completá MCP/cloud si hace falta)"
+    fi
+    # Prompt del agente test (QA) — necesario para que {file:./prompts/testeador.md} resuelva
+    if [ -f "$SCRIPT_DIR/prompts/testeador.md" ]; then
+        cp "$SCRIPT_DIR/prompts/testeador.md" "$HOME/.config/opencode/prompts/testeador.md"
+        green "  ✓ prompt del agente test copiado a ~/.config/opencode/prompts/"
     fi
 }
 

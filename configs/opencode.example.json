@@ -30,5 +30,39 @@
       "command": ["~/scripts/obsidian-context-bridge.py"],
       "enabled": true
     }
+  },
+  "agent": {
+    "test": {
+      "description": "QA + seguridad: verifica funcionalidad, seguridad y calidad de lo implementado contra la spec; reporta sin modificar código de producción.",
+      "mode": "primary",
+      "prompt": "{file:./prompts/testeador.md}",
+      "permission": {
+        "edit": {
+          "*": "deny",
+          "*.test.*": "allow",
+          "*.spec.*": "allow",
+          "*/tests/**": "allow",
+          "*/test/**": "allow",
+          "*/__tests__/**": "allow"
+        },
+        "bash": {
+          "*": "ask",
+          "npm test*": "allow",
+          "npm run test*": "allow",
+          "npx vitest*": "allow",
+          "npx jest*": "allow",
+          "npm run lint*": "allow",
+          "npm run build*": "allow",
+          "npx tsc*": "allow",
+          "npm audit*": "allow",
+          "git status*": "allow",
+          "git diff*": "allow",
+          "git log*": "allow",
+          "grep *": "allow",
+          "rg *": "allow",
+          "curl *": "allow"
+        }
+      }
+    }
   }
 }
