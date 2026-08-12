@@ -213,10 +213,14 @@ EOF
                 }
                 
                 # Carpetas extra que el template minimal no genera
-                mkdir -p src/content src/lib
+                mkdir -p src/content src/lib src/styles
                 
-                npm install astro @astrojs/react @astrojs/tailwind @astrojs/vercel
+                # Astro 7 + Tailwind 4 via plugin Vite.
+                # @astrojs/tailwind esta DEPRECADO y no soporta Astro 7 (peer astro<=5).
+                npm install astro@^7 @tailwindcss/vite tailwindcss@^4
                 npm install --save-dev @astrojs/check typescript
+                # sharp (transitiva de astro) hereda CVEs de libvips si queda <0.35.0
+                npm audit fix >/dev/null 2>&1
                 
                 # Crear package.json con scripts
                 node -e "
@@ -232,25 +236,32 @@ EOF
                 fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
                 "
                 
-                # Config de WordPress headless (REST API + WPGraphQL)
+                # SSG estatico + Tailwind 4 (CSS-first: @import "tailwindcss" + tokens @theme)
                 cat > astro.config.mjs <<'EOF'
 import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  integrations: [react(), tailwind()],
-  output: 'server',
-  adapter: (await import('@astrojs/vercel')).default(),
+  output: 'static',
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
 EOF
 
+                cat > src/styles/global.css <<'EOF'
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0a0a0f;
+  --color-panel: #14141c;
+}
+EOF
+
+                # .env.example (sin secretos; stack estatico sin WP ni DB)
                 cat > .env.example <<'EOF'
-# WordPress Headless CMS
-WP_API_URL=http://localhost:8080/wp-json
-WP_GRAPHQL_URL=http://localhost:8080/graphql
-WP_USER=admin
-WP_APP_PASSWORD=xxxx xxxx xxxx xxxx xxxx xxxx
+# Sitio estatico (SSG): no requiere variables.
+# Si mas adelante hay forms/APIs, las env vars van aca (nunca en el repo).
 EOF
                 
                 # .gitignore
@@ -259,39 +270,8 @@ node_modules/
 dist/
 .astro/
 .env
-EOF
-                
-                # WordPress headless en Docker
-                cat > docker-compose.yml <<'EOF'
-version: "3.8"
-services:
-  db:
-    image: mysql:8
-    environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wpuser
-      MYSQL_PASSWORD: wppass
-      MYSQL_ROOT_PASSWORD: rootpass
-    ports:
-      - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-  wordpress:
-    image: wordpress:6-php8.3
-    depends_on:
-      - db
-    ports:
-      - "8080:80"
-    environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_USER: wpuser
-      WORDPRESS_DB_PASSWORD: wppass
-      WORDPRESS_DB_NAME: wordpress
-    volumes:
-      - wp_data:/var/www/html
-volumes:
-  db_data:
-  wp_data:
+.env.local
+.env.*.local
 EOF
                 ;;
         esac
@@ -382,7 +362,6 @@ esac
 case "$PROJECT_TYPE" in
     mern|mern-nextjs)  DB_KIND="mongo" ;;
     pern)  DB_KIND="postgres" ;;
-    astro) DB_KIND="wp" ;;
 esac
 
 # Ventana 1: desarrollo (solo terminal de trabajo; VS Code abre como GUI aparte)
@@ -396,11 +375,7 @@ tmux send-keys -t "$SESSION:opencode.1" "$OPENCMD" C-m
 # Ventana 3: base de datos (si aplica)
 if [ -n "$DB_KIND" ]; then
     tmux new-window -t "$SESSION" -n "$DB_KIND"
-    if [ "$PROJECT_TYPE" = "astro" ]; then
-        tmux send-keys -t "$SESSION:$DB_KIND.1" "bash" C-m
-    else
-        tmux send-keys -t "$SESSION:$DB_KIND.1" "docker compose up $DB_KIND" C-m
-    fi
+    tmux send-keys -t "$SESSION:$DB_KIND.1" "docker compose up $DB_KIND" C-m
 fi
 
 # Ventana final: hermes — SOLO si no hay una sesion de Hermes ya activa (24/7)

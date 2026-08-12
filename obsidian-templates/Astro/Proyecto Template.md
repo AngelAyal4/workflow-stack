@@ -11,12 +11,11 @@ priority: <% tp.system.suggester("Prioridad", ["Urgente", "Alta", "Media", "Baja
 <% tp.file.cursor(1) %>
 
 ## Stack
-- **Frontend:** Astro 5
-- **Islas:** React
-- **CSS:** Tailwind
-- **CMS:** WordPress Headless (REST / WPGraphQL)
-- **DB:** MySQL 8
-- **Deploy:** Vercel
+- **Frontend:** Astro 7
+- **CSS:** Tailwind 4 (plugin `@tailwindcss/vite`, CSS-first)
+- **Salida:** SSG estático puro (sin islands, sin server)
+- **CMS/DB:** ninguno (contenido curado en el repo)
+- **Deploy:** Vercel / Netlify / Cloudflare Pages (hosting $0)
 
 ## Estado del Proyecto
 `INPUT[status]`
@@ -35,25 +34,28 @@ priority: <% tp.system.suggester("Prioridad", ["Urgente", "Alta", "Media", "Baja
 # Contexto del Proyecto: <% tp.file_name %>
 
 ## Stack
-- Tipo: Astro Headless CMS
-- Frontend: Astro 5
-- Backend/CMS: WordPress (REST API / WPGraphQL)
-- DB: MySQL 8
-- Deploy: Vercel
+- Tipo: Astro SSG estatico (portfolio/landing)
+- Frontend: Astro 7
+- CSS: Tailwind 4 (@tailwindcss/vite)
+- Backend/DB: ninguno (sin server, sin WP)
 
 ## Reglas de Codificacion
-1. CMS headless: WordPress solo gestiona contenido via API, no renderiza
-2. Consultar contenido con WPGraphQL o REST en .astro/server
-3. Usar estatico (SSG) con pages/ para contenido que no cambia
-4. Componentes interactivos como islands de React (client:load)
-5. No tocar la DB de WordPress directamente; usar la API
+1. SSG puro: contenido estatico curado en el repo, `output: 'static'`
+2. Cero JavaScript si CSS alcanza (nav sin hamburguesa, hover/focus por CSS)
+3. Interactividad solo si es imprescindible (island via `npx astro add react`)
+4. Imagenes optimizadas con `Image` de astro:assets (alt SIEMPRE)
+5. Accesible: HTML semantico, labels en forms, focus visible, contraste AA
+6. Responsive: mobile-first, unidades rem/%, probar en 320/768/1280px, sin overflow
+7. JAMAS hardcodear secretos; .env gitignored; .env.example con placeholders
+8. Seguridad: escapar TODO output (anti-XSS), headers seguros en el host de deploy
+9. `npm audit` limpio antes de commit (correr `npm audit fix` post-install: sharp)
 
 ## Comandos
 - `npm run dev` — Astro dev server (localhost:4321)
-- `npm run build` — Build estatico/SSR
+- `npm run build` — Build estatico (dist/)
 - `npm run preview`
 - `npm run check`
-- `docker compose up -d` — WordPress en localhost:8080
+- `npm audit` — dependencias (0 vulnerabilidades)
 
 ## No editar
 - /dist/

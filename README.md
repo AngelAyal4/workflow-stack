@@ -64,7 +64,7 @@ opencode   # y seguí el setup de MCP
 ### Crear un proyecto nuevo
 ```bash
 ws mern mi-app          # crea (o abre) proyecto MERN y lanza el workspace
-ws astro mi-blog        # stack Astro + WordPress Headless
+ws astro mi-sitio      # stack Astro (SSG estatico: portfolios/landings)
 ```
 
 `ws` crea automáticamente:
@@ -97,7 +97,7 @@ ws astro mi-blog        # stack Astro + WordPress Headless
 | **mern** | MongoDB + Express + React + Node |
 | **pern** | PostgreSQL + Express + React + Node |
 | **python** | Python 3.12 + venv + pytest |
-| **astro** | Astro 5 + React + Tailwind + WordPress headless |
+| **astro** | Astro 7 + Tailwind 4 (SSG estático) — portfolios y landings |
 
 ---
 

@@ -52,7 +52,7 @@ Un **stack** = plantilla de proyecto con estructura, dependencias y config propi
 | **MERN** | `mern-dev` (vscode+opencode) → `mongo` → [`hermes`*] | `~/workspace/projects/mern/` | `mern` |
 | **PERN** | `pern-dev` (vscode+opencode+term) → `postgres` → [`hermes`*] | `~/workspace/projects/pern/` | `pern` |
 | **Python** | `python-dev` (vscode+opencode+term) → [`hermes`*] | `~/workspace/projects/python/` | `python` |
-| **Astro + WP Headless** | `astro-dev` (vscode+opencode+term) → `wp` → [`hermes`*] | `~/workspace/projects/astro/` | `astro` |
+| **Astro** | `astro-dev` (vscode+opencode+term) → [`hermes`*] | `~/workspace/projects/astro/` | `astro` |
 
 > `[hermes*]` = ventana condicional: **no se abre si ya hay una sesión de Hermes activa (24/7)**.
 
