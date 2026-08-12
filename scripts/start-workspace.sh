@@ -354,36 +354,43 @@ SESSION="ws-$PROJECT_TYPE-$PROJECT_NAME"
 tmux has-session -t "$SESSION" 2>/dev/null && tmux kill-session -t "$SESSION"
 
 # Segun stack: modelo de opencode y ventana de db
-OPENCMD="opencode"
+OPENCMD_BASE="opencode"
 DB_KIND=""
 case "$PROJECT_TYPE" in
-    mern|mern-nextjs|astro) OPENCMD="opencode -m ollama/llama2-uncensored ." ;;
+    mern|mern-nextjs|astro) OPENCMD_BASE="opencode -m ollama/llama2-uncensored" ;;
 esac
+OPENCMD_PLAN="$OPENCMD_BASE --agent plan ."
+OPENCMD_BUILD="$OPENCMD_BASE --agent build ."
 case "$PROJECT_TYPE" in
     mern|mern-nextjs)  DB_KIND="mongo" ;;
     pern)  DB_KIND="postgres" ;;
+    astro) DB_KIND="wp" ;;
 esac
 
 # Ventana 1: desarrollo (solo terminal de trabajo; VS Code abre como GUI aparte)
 tmux new-session -d -s "$SESSION" -c "$PROJECT_PATH" -n "$PROJECT_TYPE-dev"
 tmux send-keys -t "$SESSION:1.1" "code ." C-m
 
-# Ventana 2: OpenCode CLI (pantalla completa de su propia ventana)
-tmux new-window -t "$SESSION" -n "opencode"
-tmux send-keys -t "$SESSION:opencode.1" "$OPENCMD" C-m
+# Ventana 2: OpenCode CLI — modo plan
+tmux new-window -t "$SESSION" -n "opencode-plan"
+tmux send-keys -t "$SESSION:opencode-plan.1" "$OPENCMD_PLAN" C-m
 
-# Ventana 3: base de datos (si aplica)
+# Ventana 3: OpenCode CLI — modo build
+tmux new-window -t "$SESSION" -n "opencode-build"
+tmux send-keys -t "$SESSION:opencode-build.1" "$OPENCMD_BUILD" C-m
+
+# Ventana 4: Hermes — sesión exclusiva del proyecto (--in scopea la sesión)
+tmux new-window -t "$SESSION" -n "hermes"
+tmux send-keys -t "$SESSION:hermes.1" "hermes chat --in \"$PROJECT_PATH\"" C-m
+
+# Ventana 5: base de datos (si aplica)
 if [ -n "$DB_KIND" ]; then
     tmux new-window -t "$SESSION" -n "$DB_KIND"
-    tmux send-keys -t "$SESSION:$DB_KIND.1" "docker compose up $DB_KIND" C-m
-fi
-
-# Ventana final: hermes — SOLO si no hay una sesion de Hermes ya activa (24/7)
-if pgrep -f "hermes_cli.main" >/dev/null 2>&1 || pgrep -x hermes >/dev/null 2>&1; then
-    echo "  ℹ️  Hermes ya esta corriendo (24/7). No abro ventana duplicada."
-else
-    tmux new-window -t "$SESSION" -n "hermes"
-    tmux send-keys -t "$SESSION:hermes.1" "hermes" C-m
+    if [ "$PROJECT_TYPE" = "astro" ]; then
+        tmux send-keys -t "$SESSION:$DB_KIND.1" "bash" C-m
+    else
+        tmux send-keys -t "$SESSION:$DB_KIND.1" "docker compose up $DB_KIND" C-m
+    fi
 fi
 
 # Volver a la ventana de desarrollo y attach
