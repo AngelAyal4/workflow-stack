@@ -58,6 +58,60 @@ No alcanza con middleware: usá límites **por IP + por usuario** y protección 
 
 ---
 
+## 🧭 Calidad pública, SEO y anti-vibecoding — 20 items
+
+> Estos controles complementan la seguridad técnica. Evitan que una app llegue a
+> producción con señales de prototipo generado sin revisión: HTML vacío, SEO roto,
+> accesibilidad incompleta, errores silenciosos o bundles innecesariamente pesados.
+> El punto 1 es una **excepción explícita**: una URL `*.vercel.app` está permitida
+> durante la prueba de producción; deja de ser suficiente cuando la app se publica
+> oficialmente y debe reemplazarse por un dominio propio.
+
+| # | Control | Criterio de aceptación | Evidencia mínima |
+|---:|---|---|---|
+| 1 | URL temporal de hosting | `*.vercel.app` permitido solo para staging/prueba; dominio propio requerido para publicación final. | URL y estado documentados; dominio definido antes del lanzamiento público. |
+| 2 | View Source | El HTML inicial contiene estructura, título, contenido esencial y no es un documento vacío dependiente solo de JS. | `curl`/View Source; verificar tamaño, `<title>`, landmarks y contenido. |
+| 3 | Página 404 | Existe una 404 intencional, útil y coherente con la marca; no se muestra una pantalla genérica del proveedor. | Request a ruta inexistente → `404` + contenido de la app. |
+| 4 | Stack coherente | El framework y build usados coinciden con la arquitectura definida; no queda un scaffold Vite/React accidental o una segunda app sin motivo. | `package.json`, configuración, rutas y build revisados. |
+| 5 | Títulos de página | Cada ruta HTML importante tiene un `<title>` descriptivo y único; no se reutiliza el mismo título genérico en toda la app. | HTML de cada ruta o `metadata`/`generateMetadata` por segmento. |
+| 6 | Meta description | Cada ruta indexable tiene una descripción única, concreta y útil. | `<meta name="description">` en HTML generado. |
+| 7 | Open Graph | Las páginas compartibles definen al menos `og:title`, `og:description`, `og:url` y `og:image` válida. | Metadata generada + URL de la imagen responde correctamente. |
+| 8 | Datos estructurados | Se agrega JSON-LD válido cuando el tipo de página lo justifica (sitio, producto, artículo, FAQ, etc.); no inventar schema para pantallas privadas. | `<script type="application/ld+json">` validable y coherente. |
+| 9 | Un H1 | Cada documento tiene como máximo un `<h1>` y representa el tema principal. | Conteo del DOM/HTML por ruta. |
+| 10 | H1 presente | Cada página de contenido tiene exactamente un encabezado principal; no se depende solo de texto estilizado. | Conteo del DOM/HTML por ruta, incluyendo estados vacíos y error. |
+| 11 | Canonical | Cada ruta indexable define canonical absoluto y consistente; las rutas privadas/no indexables se marcan adecuadamente o se excluyen. | `<link rel="canonical">` y política de indexación revisados. |
+| 12 | `llms.txt` | Existe `/llms.txt` con una descripción breve y controlada del sitio si el proyecto es público; no expone secretos ni datos privados. | `curl /llms.txt` → `200` y contenido revisado. |
+| 13 | `robots.txt` | Existe una política explícita: no bloquear accidentalmente buscadores ni agentes de IA; excluir rutas privadas, APIs y artefactos internos según corresponda. | `curl /robots.txt` + revisión de `allow`/`disallow`. |
+| 14 | Favicon e iconos | Favicon real y, si aplica, iconos PWA válidos en tamaños/purposes correctos. | `favicon.ico`/metadata/manifest → `200`, formato válido. |
+| 15 | Sitemap | Existe `/sitemap.xml` para rutas públicas indexables; nunca listar dashboards privados ni APIs. | `curl /sitemap.xml` → XML válido y URLs verificadas. |
+| 16 | Idioma del documento | `<html lang="…">` corresponde al idioma principal de la página; atributos `lang` adicionales solo cuando cambia el idioma. | HTML inicial y revisión de contenido. |
+| 17 | Texto alternativo | Toda imagen informativa tiene `alt` descriptivo; las decorativas usan `alt=""`; iconos interactivos tienen nombre accesible. | DOM + revisión de componentes `img`/`Image`/SVG. |
+| 18 | Source maps | Los source maps no quedan accesibles públicamente en producción; si se necesitan para observabilidad, se suben a un proveedor privado. | Requests a `*.js.map` → `404`/bloqueado; revisar artefactos públicos. |
+| 19 | Consola limpia | No hay errores ni warnings introducidos por la app en navegación o flujos principales; errores esperables se manejan sin ruido. | Console del navegador limpia por ruta/flujo, con evidencia de las excepciones. |
+| 20 | Bundle de JavaScript | El bundle inicial tiene un presupuesto definido; librerías pesadas se cargan bajo demanda y no se envía código innecesario a rutas que no lo usan. | Build analyzer/tamaños raw+gzip, comparación contra presupuesto y revisión de imports. |
+
+### ✅ Verificación rápida de calidad pública
+
+```bash
+# HTML inicial, metadata, idioma y 404
+curl -sS http://localhost:3000/ > /tmp/page.html
+curl -sS -o /tmp/404.html -w '%{http_code}\n' http://localhost:3000/ruta-inexistente
+grep -iE '<title|meta[^>]+description|og:image|rel="canonical"|<html[^>]+lang=|<h1' /tmp/page.html
+
+# Robots, sitemap, llms y favicon
+for path in /robots.txt /sitemap.xml /llms.txt /favicon.ico; do
+  curl -sS -o /dev/null -w "$path %{http_code} %{content_type}\n" "http://localhost:3000$path"
+done
+
+# Source maps publicados accidentalmente
+curl -sS -o /dev/null -w '%{http_code}\n' http://localhost:3000/_next/static/chunks/app.js.map
+
+# Bundle: registrar tamaños y compararlos con el presupuesto del proyecto
+du -ah .next/static/chunks 2>/dev/null | sort -h | tail -20
+```
+
+---
+
 ## 🔗 Cómo se integra al flujo SDD
 
 | Fase | Qué exige la checklist |
