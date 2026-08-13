@@ -156,6 +156,8 @@ workflow-stack/
 
 Este flujo integra **Spec Kit** (GitHub) con el workflow existente. SDD significa que escribís una **especificación ANTES** de escribir código — la spec es la fuente de verdad para el humano y la IA.
 
+> **División de trabajo por herramienta:** **DEFINIR = Hermes** (organiza, define arquitectura/specs/prompts; **no ejecuta código ni crea archivos del proyecto sin pedido explícito**) → **ORQUESTAR = `opencode plan`** (plan técnico read-only) → **EJECUTAR = `opencode build`** (implementa) → **TESTEAR = `opencode test`** (QA + seguridad, reporta con evidencia).
+
 ### El flujo SDD integrado
 
 ```
@@ -208,7 +210,7 @@ ws mern taskboard
 ### Integración con herramientas existentes
 
 - **OpenCode**: orquestador (plan) + ejecutor (implement) con LLMs distintos
-- **Hermes**: aplica `app-quality-gates` (código limpio, a11y, responsive, seguridad)
+- **Hermes**: **DEFINE** (organiza, specs, prompts) — no ejecuta sin pedido explícito; en revisiones aplica `app-quality-gates` con evidencia
 - **Obsidian**: specs y plans como notas vinculadas al proyecto
 - **Git**: cada feature = una spec + un branch corto
 

@@ -50,6 +50,12 @@ priority: <% tp.system.suggester("Prioridad", ["Urgente", "Alta", "Media", "Baja
 10. Sin headers inseguros (CSP, X-Frame-Options) ni dependencias con CVEs (npm audit)
 11. Seguridad: seguir la SECURITY-CHECKLIST.md del workflow-stack — rate limiting en endpoints públicos, errores genéricos al usuario, logging de anomalías, DB sin acceso público
 
+## Division de Trabajo (Workflow)
+1. DEFINIR: Hermes — organiza, define arquitectura, specs y prompts. NO ejecuta codigo ni crea archivos del proyecto sin pedido explicito (evita gasto de tokens)
+2. ORQUESTAR: opencode plan — plan tecnico por fases (read-only)
+3. EJECUTAR: opencode build — implementa el plan archivo por archivo
+4. TESTEAR: opencode test — QA + seguridad, verifica con evidencia, reporta (no arregla)
+
 ## Comandos
 - `npm run dev`
 - `npm test`
