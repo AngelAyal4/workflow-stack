@@ -3,10 +3,13 @@
 > Esta checklist aplica a **todo proyecto creado con este workflow** y a **cada feature** que pase por SDD.
 > Cada item debe estar **resuelto o explícitamente marcado `N/A` con justificación** antes de dar una feature por terminada.
 > Se evalúa en la fase de **Review** (Hermes) con evidencia real, no de palabra.
+>
+> **v2 (16/08):** combinada con el checklist de seguridad de JUANA IA (9 puntos para apps vibecodeadas).
+> Los items 11-16 son los aportes de ese estándar. Referencia: `docs/seguridad-juanaia-prompts.md`.
 
 ---
 
-## 🔥 Los 10 items
+## 🔥 Los 16 items
 
 ### 1. Rate limiting
 No alcanza con middleware: usá límites **por IP + por usuario** y protección en edge (Cloudflare WAF / Vercel).
@@ -55,6 +58,38 @@ No alcanza con middleware: usá límites **por IP + por usuario** y protección 
 ### 10. Logging centralizado + monitoreo
 - Logging estructurado + alertas (Sentry, Datadog, o logs de función + analítica).
 - Detección de anomalías: ráfagas de `5xx`, `429`, intentos de login fallidos, picos de latencia.
+
+### 11. CORS (restricción de API) — aporte JUANA IA
+- Cada endpoint sensible exige autenticación; los públicos (login/register) están limitados.
+- CORS: solo permitir los dominios definidos (`Access-Control-Allow-Origin` explícito, jamás `*` con credenciales).
+- **Verificar:** request desde origen no permitido → bloqueado (sin `Access-Control-Allow-Origin` en la respuesta).
+
+### 12. Dependencias actualizadas — aporte JUANA IA
+- `npm audit` (o pip-audit) en **0 vulnerabilidades** antes de cada commit/feature.
+- Dependencias críticas se actualizan ya; las seguras sin romper el proyecto se actualizan en el momento.
+- **Verificar:** `npm audit --audit-level=high` → 0 hallazgos.
+
+### 13. Subida de archivos — aporte JUANA IA
+- Validar el **tipo real** (magic bytes / content-type, no solo extensión) y **tamaño máximo**.
+- Los archivos subidos NUNCA pueden ejecutarse como código en el servidor (fuera de carpetas públicas ejecutables, sin doble extensión, servir con headers `X-Content-Type-Options: nosniff`).
+- **Verificar:** subir un `.html`/`.svg` malicioso disfrazado de `.jpg` → rechazado; archivo en carpeta pública no se ejecuta.
+- `N/A` justificado si el proyecto no tiene uploads.
+
+### 14. Webhooks de pagos — aporte JUANA IA
+- Verificar la **firma/secreto del webhook** en CADA petición antes de procesar el evento.
+- Ninguna acción de pago (activar acceso, marcar como pagado) depende de datos enviados desde el frontend.
+- **Verificar:** evento firmado inválido → `400` y no procesa; acción de pago imposible de forjar desde el cliente.
+- `N/A` justificado si el proyecto no procesa pagos.
+
+### 15. Headers de seguridad + sanitización — aporte JUANA IA
+- Headers básicos configurados: `Content-Security-Policy`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY/SAMEORIGIN`, `Strict-Transport-Security`.
+- Ningún endpoint devuelve contenido del usuario **sin sanitizar** (riesgo XSS) — escapar por defecto.
+- **Verificar:** `curl -i` a la app → headers presentes; input con `<script>` no se renderiza.
+
+### 16. 2FA en la infraestructura — aporte JUANA IA (tarea del dueño, NO de código)
+- 2FA activado en: hosting (Vercel), proveedor de DB (Supabase/Neon/Atlas), registrador de dominio (NIC Argentina/registrar) y email principal.
+- Ningún prompt de IA puede blindar la app si alguien entra directo a la infraestructura.
+- **Verificar:** es un pendiente del dueño del proyecto, se marca en cada Review hasta confirmarse.
 
 ---
 
