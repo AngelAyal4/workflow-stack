@@ -5,10 +5,10 @@ PROJECT_TYPE=$1
 PROJECT_NAME=$2
 
 if [ -z "$PROJECT_TYPE" ] || [ -z "$PROJECT_NAME" ]; then
-    echo "Uso: start-workspace.sh <php|mern|mern-nextjs|pern|python|astro> <nombre-proyecto>"
+    echo "Uso: start-workspace.sh <php|mern|mern-nextjs|pern|pern-nextjs|python|astro> <nombre-proyecto>"
     echo ""
     echo "Proyectos existentes:"
-    for stack in php-wordpress mern mern-nextjs pern python astro; do
+    for stack in php-wordpress mern mern-nextjs pern pern-nextjs python astro; do
         echo "  $stack:"
         ls ~/workspace/projects/$stack 2>/dev/null | sed "s/^/    - /"
     done
@@ -162,7 +162,7 @@ EOF
             pern)
                 mkdir -p client server/{routes,models,controllers,middleware,tests}
                 npm init -y
-                npm install express cors mongoose dotenv bcrypt jsonwebtoken
+                npm install express cors pg dotenv bcrypt jsonwebtoken
                 npm install --save-dev jest supertest nodemon
                 
                 # Crear package.json con scripts
@@ -197,6 +197,82 @@ EOF
                 echo "      - postgres_data:/var/lib/postgresql/data" >> docker-compose.yml
                 echo "volumes:" >> docker-compose.yml
                 echo "  postgres_data:" >> docker-compose.yml
+                ;;
+            pern-nextjs)
+                # Crear proyecto Next.js fullstack con App Router + PostgreSQL
+                npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --no-turbopack --use-npm --yes 2>/dev/null || {
+                    echo "create-next-app fallo, creando estructura manual..."
+                    npm init -y
+                    mkdir -p src/app src/components src/lib src/types src/hooks src/db
+                }
+
+                # Dependencias backend: pg (PostgreSQL) + validacion + auth
+                npm install pg dotenv bcryptjs jsonwebtoken zod
+                npm install --save-dev @types/pg @types/bcryptjs @types/jsonwebtoken nodemon
+
+                # Estructura backend (API routes + db + lib)
+                mkdir -p src/app/api/auth src/app/api/users src/app/api/turnos
+                mkdir -p src/db src/lib src/middleware src/types
+
+                # package.json con scripts fullstack
+                node -e "
+                const fs = require('fs');
+                const pkg = JSON.parse(fs.readFileSync('package.json'));
+                pkg.scripts = {
+                    dev: 'next dev',
+                    build: 'next build',
+                    start: 'next start',
+                    lint: 'next lint',
+                    test: 'jest --coverage'
+                };
+                fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+                "
+
+                # .gitignore
+                cat > .gitignore <<'EOF'
+node_modules/
+.next/
+out/
+build/
+.env
+.env.local
+.env.*.local
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+npm-debug.log*
+EOF
+
+                # Docker Compose para PostgreSQL 16
+                cat > docker-compose.yml <<'EOF'
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
+EOF
+
+                # .env.example (sin secretos)
+                cat > .env.example <<'EOF'
+# PostgreSQL (Docker local)
+DATABASE_URL=postgresql://user:pass@localhost:5432/dev
+# Supabase/Neon (produccion): postgresql://...@... (host remoto)
+# JWT Secret (generar con: openssl rand -base64 32)
+JWT_SECRET=your-jwt-secret-here
+# NextAuth (cuando se implemente)
+NEXTAUTH_SECRET=your-nextauth-secret
+NEXTAUTH_URL=http://localhost:3000
+EOF
                 ;;
             php)
                 mkdir -p wp-content/themes wp-content/plugins
@@ -357,13 +433,13 @@ tmux has-session -t "$SESSION" 2>/dev/null && tmux kill-session -t "$SESSION"
 OPENCMD_BASE="opencode"
 DB_KIND=""
 case "$PROJECT_TYPE" in
-    mern|mern-nextjs|astro) OPENCMD_BASE="opencode -m ollama/llama2-uncensored" ;;
+    mern|mern-nextjs|pern-nextjs|astro) OPENCMD_BASE="opencode -m ollama/llama2-uncensored" ;;
 esac
 OPENCMD_PLAN="$OPENCMD_BASE --agent plan ."
 OPENCMD_BUILD="$OPENCMD_BASE --agent build ."
 case "$PROJECT_TYPE" in
     mern|mern-nextjs)  DB_KIND="mongo" ;;
-    pern)  DB_KIND="postgres" ;;
+    pern|pern-nextjs)  DB_KIND="postgres" ;;
     astro) DB_KIND="wp" ;;
 esac
 

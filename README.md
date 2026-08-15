@@ -64,6 +64,7 @@ opencode   # y seguí el setup de MCP
 ### Crear un proyecto nuevo
 ```bash
 ws mern mi-app          # crea (o abre) proyecto MERN y lanza el workspace
+ws pern-nextjs mi-app   # stack PERN + Next.js (PostgreSQL + Next.js App Router)
 ws astro mi-sitio      # stack Astro (SSG estatico: portfolios/landings)
 ```
 
@@ -96,6 +97,7 @@ ws astro mi-sitio      # stack Astro (SSG estatico: portfolios/landings)
 | **php** | WordPress (tema hijo, ACF, CPT) + MySQL |
 | **mern** | MongoDB + Express + React + Node |
 | **pern** | PostgreSQL + Express + React + Node |
+| **pern-nextjs** | PostgreSQL + Next.js App Router (fullstack: DitaHelp, Liga Amateur) |
 | **python** | Python 3.12 + venv + pytest |
 | **astro** | Astro 7 + Tailwind 4 (SSG estático) — portfolios y landings |
 
