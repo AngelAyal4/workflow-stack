@@ -125,6 +125,18 @@ No alcanza con middleware: usá límites **por IP + por usuario** y protección 
 | 19 | Consola limpia | No hay errores ni warnings introducidos por la app en navegación o flujos principales; errores esperables se manejan sin ruido. | Console del navegador limpia por ruta/flujo, con evidencia de las excepciones. |
 | 20 | Bundle de JavaScript | El bundle inicial tiene un presupuesto definido; librerías pesadas se cargan bajo demanda y no se envía código innecesario a rutas que no lo usan. | Build analyzer/tamaños raw+gzip, comparación contra presupuesto y revisión de imports. |
 
+### 🧠 Capa GEO — citabilidad en motores de IA (agregada 16/08, eGEOagents)
+
+> Complementa el SEO clásico: no solo rankear en Google, sino que **ChatGPT, Perplexity, Gemini y Claude citen la página**.
+> Herramienta: `~/workspace/tools/eGEOagents` (MIT). Prompt: `workflow-stack/prompts/04-geo-optimizer.md`.
+
+| # | Control | Criterio de aceptación | Evidencia mínima |
+|---:|---|---|---|
+| 21 | Contenido citable | El contenido aplica las 10 features GEO (ranking emphasis, intent alignment, diferenciación, social proof, narrativa, autoridad, USPs, urgencia, formato escaneable, precisión factual) sin inventar claims. | Score GEO antes/después + diff del contenido. |
+| 22 | JSON-LD para LLMs | Schema estructurado por tipo de página (LocalBusiness/Service/FAQPage/Organization) presente y válido; los LLMs extraen la info clave (nombre, servicios, horarios, contacto). | `<script type="application/ld+json">` validable + extracción simulada. |
+| 23 | `llms.txt` citable | `/llms.txt` existe con descripción breve y controlada del sitio (sin secretos ni datos privados); enlaza las páginas clave. | `curl /llms.txt` → `200` + contenido revisado. |
+| 24 | Consultas objetivo | Se definieron 3-5 queries típicas del negocio y el contenido responde a la intención de cada una (para que el motor las responda citándote). | Lista de queries + mapeo a secciones del contenido. |
+
 ### ✅ Verificación rápida de calidad pública
 
 ```bash

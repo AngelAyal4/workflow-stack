@@ -101,6 +101,12 @@ ws astro mi-sitio      # stack Astro (SSG estatico: portfolios/landings)
 | **python** | Python 3.12 + venv + pytest |
 | **astro** | Astro 7 + Tailwind 4 (SSG estático) — portfolios y landings |
 
+### Herramientas externas
+
+| Herramienta | Para qué | Dónde |
+|-------------|----------|-------|
+| **eGEOagents** (MIT) | GEO/AEO: optimizar contenido para que lo citen ChatGPT, Perplexity, Gemini, Claude (AI SEO) | `~/workspace/tools/eGEOagents` — setup: `bash scripts/setup-egeo.sh` · prompt: `prompts/04-geo-optimizer.md` · checklist: items 21-24 |
+
 ---
 
 ## 🔐 Seguridad — Checklist obligatoria
