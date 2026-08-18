@@ -107,6 +107,28 @@ ws astro mi-sitio      # stack Astro (SSG estatico: portfolios/landings)
 |-------------|----------|-------|
 | **eGEOagents** (MIT) | GEO/AEO: optimizar contenido para que lo citen ChatGPT, Perplexity, Gemini, Claude (AI SEO) | `~/workspace/tools/eGEOagents` — setup: `bash scripts/setup-egeo.sh` · prompt: `prompts/04-geo-optimizer.md` · checklist: items 21-24 |
 
+### 🔄 Bucle de corrección automática (SDD Loop)
+
+> Iteración automática **test → fix → test** hasta aprobar (o N intentos). Cierra el ciclo sin intervención manual.
+
+```bash
+# Uso básico
+bash scripts/bucle-correccion.sh ~/workspace/projects/pern-nextjs/ditahelp
+
+# Con límite de iteraciones y modelo
+bash scripts/bucle-correccion.sh . --max-iter 5 --model opencode-go/deepseek-v4-flash
+
+# Con spec activa
+bash scripts/bucle-correccion.sh . --spec specs/feature-turnos.md
+```
+
+**Cómo funciona:**
+1. Corre el **testeador** (`opencode run --agent test`) → escribe `qa-report.md` en la raíz (veredicto final `**APROBADO**`/`**RECHAZADO**`)
+2. Si `RECHAZADO` → corre el **corrector** (`opencode run --agent build` con `prompts/corrector.md`) que corrige SOLO los bugs del reporte
+3. Re-testea → repite hasta `--max-iter` (default 3) o aprobación
+
+**Contrato de reporte (testeador):** todo reporte termina con `**APROBADO**` o `**RECHAZADO**` — es lo que el script parsea.
+
 ---
 
 ## 🔐 Seguridad — Checklist obligatoria
