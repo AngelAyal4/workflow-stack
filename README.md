@@ -73,6 +73,15 @@ ws mern taskboard
 ws pern cashinsight
 ```
 
+Esto crea:
+- Sesión de tmux con ventanas de desarrollo y OpenCode CLI
+- Proyecto de Hermes (aparece en el desktop) anclado a la ruta
+
+Para entrar al tmux (opcional):
+```bash
+tmux attach -t ws-mern-taskboard
+```
+
 Estructura generada:
 ```
 <proyecto>/
@@ -155,11 +164,11 @@ workflow-stack/
 
 ### Agentes de IA
 
-| Agente | Rol | Cuándo se usa |
-|---|---|---|
-| **Hermes** | Orquestador + DEFINE + SYNC/DEPLOY | Organiza, crea specs, hace commit/push con evidencia, no ejecuta código sin pedido explícito |
-| **OpenCode** | Ejecutor (Plan + Implement) | Modelo potente para planificar, modelo eficiente para implementar |
-| **OpenCode (agente test)** | QA + seguridad | Verifica, no implementa. Genera reportes con veredicto APROBADO/RECHAZADO |
+| Agente | Rol | Cuándo se usa | Surface |
+|---|---|---|---|
+| **Hermes** | Orquestador + DEFINE + SYNC/DEPLOY | Organiza, crea specs, hace commit/push con evidencia | **Desktop app** (proyecto anclado a la ruta del proyecto) |
+| **OpenCode** | Ejecutor (Plan + Implement) | Modelo potente para planificar, modelo eficiente para implementar | CLI en tmux |
+| **OpenCode (agente test)** | QA + seguridad | Verifica, no implementa. Genera reportes con veredicto APROBADO/RECHAZADO | CLI en tmux |
 
 ### Herramientas externas
 
