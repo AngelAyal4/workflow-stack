@@ -15,25 +15,6 @@ if [ -z "$PROJECT_TYPE" ] || [ -z "$PROJECT_NAME" ]; then
     exit 1
 fi
 
-# 0. Purgar estado Zellij viejo.
-#    Bug conocido zellij 0.44.3 (#5261/#5440): servers/sockets huerfanos acumulados
-#    hacen que un cliente nuevo sea expulsado ("1000 consecutive unknown messages")
-#    dejando la terminal en raw mode (cascada de numeros).
-#    REGLA: solo se purga si la terminal es FRESCA (fuera de zellij/tmux).
-#    Si ya estas dentro de zellij, no se toca nada (evita matar la propia sesion).
-cleanup_stale_zellij() {
-    if [ -n "$ZELLIJ_SESSION_NAME" ] || [ -n "$STY" ]; then
-        echo "  ℹ️  Detectado zellij/tmux activo: sin purga (modo seguro)"
-        return
-    fi
-    echo "  ✓ Terminal limpia: purgando servers Zellij viejos..."
-    zellij delete-all-sessions 2>/dev/null          # limpia las sesiones EXITED
-    pkill -9 -x zellij 2>/dev/null                  # mata servers fantasma restantes
-    rm -rf "/run/user/$(id -u)/zellij" 2>/dev/null  # borra sockets huerfanos colgados
-    sleep 1
-}
-cleanup_stale_zellij
-
 PROJECT_PATH="$HOME/workspace/projects/$PROJECT_TYPE/$PROJECT_NAME"
 VAULT_PATH="$HOME/obsidian-vault"
 
@@ -359,11 +340,6 @@ EOF
                 if [ ! -f "$PROJECT_PATH/memory/MEMORY.md" ]; then
                     printf '# MEMORY.md — Indice de memoria del proyecto\n\n(Un archivo por tema en memory/, cada entrada: `- [Title](file.md) — hook` <150 chars)\n' > "$PROJECT_PATH/memory/MEMORY.md"
                 fi
-        
-                # Spec Driven Development: constitution + specs
-        mkdir -p "$PROJECT_PATH/specs"
-        cp ~/workflow-stack/spec-kit/constitution.md "$PROJECT_PATH/constitution.md"
-        cp ~/workflow-stack/spec-kit/specify.md "$PROJECT_PATH/specs/_template.md"
         
                 echo "export PROJECT_NAME=\\\"$PROJECT_NAME\\\"" > "$PROJECT_PATH/.envrc"
         echo "export PROJECT_TYPE=\"$PROJECT_TYPE\"" >> "$PROJECT_PATH/.envrc"
