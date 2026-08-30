@@ -83,8 +83,8 @@ setup_shell() {
 # === WORKFLOW STACK ===
 alias ws='~/scripts/start-workspace.sh'
 alias obs='obsidian ~/obsidian-vault &'
-alias zj='zellij'
-alias zjl='zellij --layout'
+alias tml='tmux ls'
+alias tma='tmux attach -t'
 alias da='direnv allow'
 alias dr='direnv reload'
 alias oc='opencode'
@@ -123,15 +123,7 @@ setup_gh() {
     fi
 }
 
-# ---------- 5. Layouts de Zellij --------------------------------
-setup_zellij_layouts() {
-    banner "Layouts de Zellij (secundario)"
-    mkdir -p "$HOME/.config/zellij/layouts"
-    cp "$SCRIPT_DIR/zellij-layouts/"*.kdl "$HOME/.config/zellij/layouts/" 2>/dev/null || true
-    green "  ✓ layouts copiados (php mern pern python astro)"
-}
-
-# ---------- 5b. Config de tmux (multiplexor principal) ----------
+# ---------- 5. Config de tmux (multiplexor principal) ----------
 setup_tmux() {
     banner "Config de tmux (multiplexor principal)"
     mkdir -p "$HOME/.config/tmux"
@@ -239,6 +231,18 @@ setup_vault() {
     fi
 }
 
+# ---------- 11. Skills de Hermes ---------------------------------
+setup_skills() {
+    banner "Skills de Hermes"
+    mkdir -p "$HOME/.hermes/skills"
+    if [ -d "$SCRIPT_DIR/skills" ]; then
+        cp -rn "$SCRIPT_DIR/skills/"* "$HOME/.hermes/skills/" 2>/dev/null || true
+        green "  ✓ skills copiadas a ~/.hermes/skills/"
+    else
+        yellow "  ⚠️ No se encontró directorio skills/ en el repo"
+    fi
+}
+
 # ==================================================================
 # MAIN
 # ==================================================================
@@ -252,7 +256,6 @@ install_node
 install_ollama
 setup_shell
 setup_gh
-setup_zellij_layouts
 setup_tmux
 setup_scripts
 setup_opencode_desktop
@@ -262,6 +265,7 @@ setup_configs
 setup_docs
 setup_cron
 setup_vault
+setup_skills
 
 echo ""
 banner "✔ Workflow instalado"
@@ -271,4 +275,5 @@ Proximos pasos:
   2. Configurá tus MCP servers en opencode (obsidian-context, github) y tu provider cloud
   3. En Obsidian activá los plugins: Tasks, Kanban, Dataview, Templater
   4. Levantá tu primer proyecto:   ws mern mi-app
+  5. Las skills ya están disponibles en la nueva sesión de Hermes
 "
