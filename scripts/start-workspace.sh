@@ -385,7 +385,7 @@ if [ -f "docker-compose.yml" ]; then
     docker compose up -d
 fi
 
-# 6. Abrir OpenCode Desktop (GUI) ademas del CLI que entra en Zellij
+# 6. Abrir OpenCode Desktop (GUI) además de las ventanas CLI en tmux
 if command -v ai.opencode.desktop >/dev/null 2>&1; then
     echo "Abriendo OpenCode Desktop (GUI)..."
     ai.opencode.desktop "$PROJECT_PATH" >/dev/null 2>&1 &
@@ -431,11 +431,7 @@ tmux send-keys -t "$SESSION:opencode-plan.1" "$OPENCMD_PLAN" C-m
 tmux new-window -t "$SESSION" -n "opencode-build"
 tmux send-keys -t "$SESSION:opencode-build.1" "$OPENCMD_BUILD" C-m
 
-# Ventana 4: Hermes — sesión exclusiva del proyecto (--in scopea la sesión)
-tmux new-window -t "$SESSION" -n "hermes"
-tmux send-keys -t "$SESSION:hermes.1" "hermes chat --in \"$PROJECT_PATH\"" C-m
-
-# Ventana 5: base de datos (si aplica)
+# Ventana 4: base de datos (si aplica)
 if [ -n "$DB_KIND" ]; then
     tmux new-window -t "$SESSION" -n "$DB_KIND"
     if [ "$PROJECT_TYPE" = "astro" ]; then
@@ -450,8 +446,12 @@ tmux select-window -t "$SESSION:$PROJECT_TYPE-dev"
 tmux select-pane -t "$SESSION:$PROJECT_TYPE-dev.1"
 # Re-ajusta la ventana al tamano real del terminal antes de plegarse
 tmux resize-window -A 2>/dev/null
-exec tmux attach -t "$SESSION"
 
-echo "Sesion finalizada."
-echo "Para volver a entrar: tmux attach -t $SESSION"
-echo "Para listar: tmux ls"
+# Registrar/activar el proyecto en Hermes Desktop (sin Hermes CLI en tmux)
+hermes project create "$PROJECT_NAME" --primary "$PROJECT_PATH" --use 2>/dev/null || {
+    # Si ya existe, solo activarlo
+    hermes project use "$PROJECT_NAME" 2>/dev/null
+}
+
+# El tmux se abre en la terminal desde la que se ejecuto ws
+exec tmux attach -t "$SESSION"

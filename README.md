@@ -73,11 +73,12 @@ ws mern taskboard
 ws pern cashinsight
 ```
 
-Esto crea:
+Esto crea y abre automáticamente en la terminal desde la que ejecutaste `ws`:
 - Sesión de tmux con ventanas de desarrollo y OpenCode CLI
-- Proyecto de Hermes (aparece en el desktop) anclado a la ruta
+- Ventana de base de datos cuando el stack la requiere
+- Proyecto de Hermes Desktop anclado a `PROJECT_PATH`
 
-Para entrar al tmux (opcional):
+La ventana de Hermes **no** se crea dentro de tmux: el trabajo con Hermes se hace desde la interfaz Desktop. Para salir del tmux sin cerrar la sesión, usá `Ctrl-b d`. Para volver a entrar manualmente:
 ```bash
 tmux attach -t ws-mern-taskboard
 ```
