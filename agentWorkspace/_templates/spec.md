@@ -1,6 +1,6 @@
 ---
 id: [area]-[feature-name]
-area: [backend|frontend|qa|devops|docs]
+area: [backend|frontend|qa|devops|docs|design-uiux|security]
 depends_on: [[area]-[feature-name], ...]
 estimated_time: [Xm|Xh]
 ---

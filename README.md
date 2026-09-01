@@ -107,8 +107,10 @@ Estructura generada:
 │   ├── qa/plans/          # Planes de QA
 │   ├── devops/specs/      # Specs de infra/deploy
 │   ├── devops/plans/      # Planes de infra/deploy
-│   ├── docs/specs/        # Specs de documentación
-│   └── docs/plans/        # Planes de documentación
+├── design-uiux/specs/    # Specs de diseño UI/UX
+├── design-uiux/plans/    # Planes de diseño UI/UX
+├── security/specs/       # Specs de seguridad
+└── security/plans/       # Planes de seguridad
 ├── memory/                # Memoria del proyecto
 └── ...
 ```
@@ -169,6 +171,8 @@ workflow-stack/
 │   ├── qa/                      # (vacío, se llena al crear proyecto)
 │   ├── devops/                  # (vacío, se llena al crear proyecto)
 │   └── docs/                    # (vacío, se llena al crear proyecto)
+│   ├── design-uiux/             # (vacío, se llena al crear proyecto)
+│   └── security/                # (vacío, se llena al crear proyecto)
 ├── configs/                     # Configs de referencia (tmux, opencode, envrc)
 ├── docs/                        # Documentación (seguridad, prompts, guías)
 ├── obsidian-templates/          # Plantillas de Obsidian (proyecto + por stack)

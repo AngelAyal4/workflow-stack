@@ -357,6 +357,10 @@ EOF
                 mkdir -p "$PROJECT_PATH/agentWorkspace/devops/plans"
                 mkdir -p "$PROJECT_PATH/agentWorkspace/docs/specs"
                 mkdir -p "$PROJECT_PATH/agentWorkspace/docs/plans"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/design-uiux/specs"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/design-uiux/plans"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/security/specs"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/security/plans"
         
                 echo "export PROJECT_NAME=\\\"$PROJECT_NAME\\\"" > "$PROJECT_PATH/.envrc"
         echo "export PROJECT_TYPE=\"$PROJECT_TYPE\"" >> "$PROJECT_PATH/.envrc"
