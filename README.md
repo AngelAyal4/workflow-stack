@@ -29,14 +29,15 @@ Workflow Stack es un **ecosistema de desarrollo** que organiza tu entorno de tra
 | Feature | Qué hace |
 |---|---|
 | **Bootstrap en una pasada** | `./setup.sh` instala y configura todo el entorno |
-| **SDD (Spec-Driven Development)** | Flujo estructurado: Constitution → Specify → Plan → Implement → Review |
-| **Multi-agent workflow** | Hermes (orquestador) + OpenCode (ejecutor) + agentes custom |
-| **Skills de Hermes** | organic-routing, auto-memory, sdd-workflow, skill-style-guide |
+| **agentWorkspace** | Sistema de specs, planes y orquestación multi-area para desarrollo autónomo |
+| **ChiefAgent (Kaspian)** | Orquestador que delega specs a OpenCode y verifica criterios de éxito |
+| **Multi-agent workflow** | Hermes (orquestador) + OpenCode (ejecutor) + agentes especializados |
+| **Skills de Hermes** | organic-routing, auto-memory, sdd-workflow, skill-style-guide, chief-agent |
 | **Memoria persistente** | Session summaries automáticas, contexto cross-session |
 | **Plantillas Obsidian** | Templates por stack (MERN, PERN, MEAN) + proyecto genérico |
 | **Seguridad integrada** | SECURITY-CHECKLIST.md obligatoria (16 items) en cada feature |
-| **Bucle de corrección** | test → fix → test automático hasta aprobación QA |
-| **Multi-stack** | Crea proyectos MERN, PERN, MEAN con un comando |
+| **Bucle de corrección** | test → fix → test automático hasta aprobar QA |
+| **Multi-stack** | Crea proyectos MERN, PERN, MEAN, Astro con un comando |
 
 ---
 
@@ -74,9 +75,19 @@ ws pern cashinsight
 ```
 
 Esto crea y abre automáticamente en la terminal desde la que ejecutaste `ws`:
-- Sesión de tmux con ventanas de desarrollo y OpenCode CLI
-- Ventana de base de datos cuando el stack la requiere
+- Sesión de tmux con 6 ventanas: terminal, OpenCode plan/build/test, VS Code, DB
+- Carpeta `agentWorkspace/` con specs y planes por área (backend, frontend, qa, devops, docs)
 - Proyecto de Hermes Desktop anclado a `PROJECT_PATH`
+
+Ventanas de tmux:
+| Ventana | Contenido |
+|---------|-----------|
+| `*-term` | Terminal bash (git, npm, comandos) |
+| `opencode-plan` | OpenCode TUI — plan técnico |
+| `opencode-build` | OpenCode TUI — implementación |
+| `opencode-test` | OpenCode TUI — QA |
+| `*-code` | VS Code (ajustes finos) |
+| `wp`/`mongo`/`postgres` | Base de datos (según stack) |
 
 La ventana de Hermes **no** se crea dentro de tmux: el trabajo con Hermes se hace desde la interfaz Desktop. Para salir del tmux sin cerrar la sesión, usá `Ctrl-b d`. Para volver a entrar manualmente:
 ```bash
@@ -86,10 +97,19 @@ tmux attach -t ws-mern-taskboard
 Estructura generada:
 ```
 <proyecto>/
-├── constitution.md          # Reglas inmutables del proyecto
-├── specs/
-│   └── feature-auth.md      # Spec del feature
-├── memory/                  # Memoria del proyecto
+├── agentWorkspace/        # Specs y planes (NO se sube a git)
+│   ├── _master/           # Plan maestro (DAG, criterios globales)
+│   ├── backend/specs/     # Specs de backend
+│   ├── backend/plans/     # Planes de backend
+│   ├── frontend/specs/    # Specs de frontend
+│   ├── frontend/plans/    # Planes de frontend
+│   ├── qa/specs/          # Specs de QA
+│   ├── qa/plans/          # Planes de QA
+│   ├── devops/specs/      # Specs de infra/deploy
+│   ├── devops/plans/      # Planes de infra/deploy
+│   ├── docs/specs/        # Specs de documentación
+│   └── docs/plans/        # Planes de documentación
+├── memory/                # Memoria del proyecto
 └── ...
 ```
 
@@ -97,22 +117,31 @@ Estructura generada:
 
 ## Cómo se usa
 
-### Flujo SDD (Spec-Driven Development)
+### Flujo agentWorkspace + ChiefAgent
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  Constitution  →  Specify  →  Plan  →  Implement  →  Review │
-│  (reglas)        (qué)       (cómo)    (código)    (evidencia)│
-└─────────────────────────────────────────────────────────────┘
-```
+1. SESIÓN PRINCIPAL (Angel + Kaspian)
+   └── Spec storm: definen todos los specs del proyecto
+   └── Kaspian infiere DAG de los depends_on
+   └── Se crea agentWorkspace/ completo
 
-| Fase | Qué hace | Quién | Herramienta |
-|---|---|---|---|
-| **1. Constitution** | Define reglas inmutables del proyecto | Usuario + IA | Hermes |
-| **2. Specify** | Crea la spec del feature (problema, usuarios, flujos) | Hermes (DEFINE) | `spec-kit/specify.md` |
-| **3. Plan** | Convierte la spec en plan técnico por fases | IA (modelo potente) | OpenCode + `prompts/orquestador.md` |
-| **4. Implement** | Ejecuta tarea por tarea con validación | IA (modelo eficiente) | OpenCode + `prompts/ejecutor.md` |
-| **5. Review** | Verifica que la implementación cumple la spec | Hermes + agente test | `scripts/bucle-correccion.sh` |
+2. APROBACIÓN
+   └── Kaspian revisa cada spec vs criterios globales
+   └── Si todo OK → ChiefAgent toma el control
+
+3. EJECUCIÓN AUTÓNOMA (ChiefAgent = Kaspian)
+   └── Lee plan maestro
+   └── Por cada fase:
+       a. Toma spec de área X
+       b. Delega a OpenCode en sesión NUEVA
+       c. Verifica criterios de éxito
+       d. Si pasa → avanza
+       e. Si falla → fix loop (3 iteraciones) → escala a Angel
+   └── Reporte final
+
+4. REVISIÓN FINAL
+   └── Angel revisa el resultado
+```
 
 ### Skills de Hermes
 
@@ -124,15 +153,7 @@ Las skills se cargan automáticamente en cada sesión de Hermes:
 | **auto-memory** | Al finalizar sesiones significativas | Guarda session summaries con decisiones, descubrimientos y contexto |
 | **sdd-workflow** | Cuando el usuario dice "use SDD" | Ejecuta el flujo completo de Spec-Driven Development |
 | **skill-style-guide** | Al crear/refactorar skills | Estándar LLM-first para authoring consistente |
-
-### Bucle de corrección automática
-
-```bash
-# Ejecuta test → fix → test hasta aprobar (o max-iter)
-./scripts/bucle-correccion.sh --spec specs/feature-auth.md --max-iter 5
-```
-
-El agente test genera un reporte QA. Si hay hallazgos, el agente corrector arregla solo lo necesario. Se repite hasta que el test apruebe.
+| **chief-agent** | Cuando Kaspian orquesta agentWorkspace | Spec storm, DAG, delegación a OpenCode, verificación |
 
 ---
 
@@ -140,23 +161,29 @@ El agente test genera un reporte QA. Si hay hallazgos, el agente corrector arreg
 
 ```
 workflow-stack/
-├── configs/                    # Configs de referencia (tmux, opencode, envrc)
-├── docs/                       # Documentación (seguridad, prompts, guías)
-├── obsidian-templates/         # Plantillas de Obsidian (proyecto + por stack)
-├── prompts/                    # Prompts para agentes (orquestador, ejecutor, testeador)
-├── scripts/                    # Scripts del workspace (bucle-correccion, setup, backup)
-├── spec-kit/                   # Templates de SDD (constitution, specify)
-├── skills/                     # Skills de Hermes
+├── agentWorkspace/              # Templates de specs y planes (NO es un proyecto real)
+│   ├── _templates/              # Templates base (spec.md, plan.md)
+│   ├── _master/                 # (vacío, se llena al crear proyecto)
+│   ├── backend/                 # (vacío, se llena al crear proyecto)
+│   ├── frontend/                # (vacío, se llena al crear proyecto)
+│   ├── qa/                      # (vacío, se llena al crear proyecto)
+│   ├── devops/                  # (vacío, se llena al crear proyecto)
+│   └── docs/                    # (vacío, se llena al crear proyecto)
+├── configs/                     # Configs de referencia (tmux, opencode, envrc)
+├── docs/                        # Documentación (seguridad, prompts, guías)
+├── obsidian-templates/          # Plantillas de Obsidian (proyecto + por stack)
+├── scripts/                     # Scripts del workspace (bucle-correccion, setup, backup)
+├── skills/                      # Skills de Hermes
 │   └── software-development/
-│       ├── organic-routing/    # Ruteo por complejidad
-│       ├── auto-memory/        # Session summaries automáticas
-│       ├── sdd-workflow/       # Spec-Driven Development
-│       ├── skill-style-guide/  # Estándar de authoring
-│       └── sdd-feature-delivery-review/  # Review pre-commit
-├── zellij-layouts/             # Layouts de Zellij
-├── setup.sh                    # Bootstrap del entorno (una pasada)
-├── SECURITY-CHECKLIST.md       # Checklist de seguridad obligatoria (16 items)
-└── README.md                   # Este archivo
+│       ├── organic-routing/     # Ruteo por complejidad
+│       ├── auto-memory/         # Session summaries automáticas
+│       ├── sdd-workflow/        # Spec-Driven Development
+│       ├── skill-style-guide/   # Estándar de authoring
+│       ├── sdd-feature-delivery-review/  # Review pre-commit
+│       └── chief-agent/         # Orquestación multi-area
+├── setup.sh                     # Bootstrap del entorno (una pasada)
+├── SECURITY-CHECKLIST.md        # Checklist de seguridad obligatoria (16 items)
+└── README.md                    # Este archivo
 ```
 
 ---

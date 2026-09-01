@@ -53,6 +53,8 @@ if [ ! -d "$PROJECT_PATH" ]; then
                 echo 'node_modules/' > .gitignore
                 echo '.env' >> .gitignore
                 echo 'coverage/' >> .gitignore
+                echo 'prompts/' >> .gitignore
+        echo 'agentWorkspace/' >> .gitignore
                 
                 echo "version: \"3.8\"" > docker-compose.yml
                 echo "services:" >> docker-compose.yml
@@ -163,6 +165,8 @@ EOF
                 echo 'node_modules/' > .gitignore
                 echo '.env' >> .gitignore
                 echo 'coverage/' >> .gitignore
+                echo 'prompts/' >> .gitignore
+        echo 'agentWorkspace/' >> .gitignore
                 
                 echo "version: \"3.8\"" > docker-compose.yml
                 echo "services:" >> docker-compose.yml
@@ -341,6 +345,19 @@ EOF
                     printf '# MEMORY.md — Indice de memoria del proyecto\n\n(Un archivo por tema en memory/, cada entrada: `- [Title](file.md) — hook` <150 chars)\n' > "$PROJECT_PATH/memory/MEMORY.md"
                 fi
         
+                # Carpetas de agentWorkspace (regla suprema: specs y plans por área)
+                mkdir -p "$PROJECT_PATH/agentWorkspace/_master"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/backend/specs"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/backend/plans"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/frontend/specs"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/frontend/plans"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/qa/specs"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/qa/plans"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/devops/specs"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/devops/plans"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/docs/specs"
+                mkdir -p "$PROJECT_PATH/agentWorkspace/docs/plans"
+        
                 echo "export PROJECT_NAME=\\\"$PROJECT_NAME\\\"" > "$PROJECT_PATH/.envrc"
         echo "export PROJECT_TYPE=\"$PROJECT_TYPE\"" >> "$PROJECT_PATH/.envrc"
         echo "export OPENAI_API_KEY=\"not-needed-local\"" >> "$PROJECT_PATH/.envrc"
@@ -385,15 +402,7 @@ if [ -f "docker-compose.yml" ]; then
     docker compose up -d
 fi
 
-# 6. Abrir OpenCode Desktop (GUI) además de las ventanas CLI en tmux
-if command -v ai.opencode.desktop >/dev/null 2>&1; then
-    echo "Abriendo OpenCode Desktop (GUI)..."
-    ai.opencode.desktop "$PROJECT_PATH" >/dev/null 2>&1 &
-else
-    echo "⚠️ OpenCode Desktop no instalado (opencode-desktop-linux-amd64.deb). Solo se abre el CLI en tmux."
-fi
-
-# 7. Previo: matar opencode CLI huerfano (evita procesos zombies)
+# 7. Previo: matar opencode CLI huérfano (evita procesos zombies)
 pkill -9 -u "$USER" -f "opencode -m" 2>/dev/null
 pkill -9 -u "$USER" -x opencode 2>/dev/null
 sync
@@ -413,15 +422,16 @@ case "$PROJECT_TYPE" in
 esac
 OPENCMD_PLAN="$OPENCMD_BASE --agent plan ."
 OPENCMD_BUILD="$OPENCMD_BASE --agent build ."
+OPENCMD_TEST="$OPENCMD_BASE --agent test ."
 case "$PROJECT_TYPE" in
     mern|mern-nextjs)  DB_KIND="mongo" ;;
     pern|pern-nextjs)  DB_KIND="postgres" ;;
-    astro) DB_KIND="wp" ;;
+    astro|astro-wp)    DB_KIND="wp" ;;
 esac
 
-# Ventana 1: desarrollo (solo terminal de trabajo; VS Code abre como GUI aparte)
-tmux new-session -d -s "$SESSION" -c "$PROJECT_PATH" -n "$PROJECT_TYPE-dev"
-tmux send-keys -t "$SESSION:1.1" "code ." C-m
+# Ventana 1: terminal de trabajo (bash)
+tmux new-session -d -s "$SESSION" -c "$PROJECT_PATH" -n "$PROJECT_TYPE-term"
+tmux send-keys -t "$SESSION:1.1" "bash" C-m
 
 # Ventana 2: OpenCode CLI — modo plan
 tmux new-window -t "$SESSION" -n "opencode-plan"
@@ -431,7 +441,15 @@ tmux send-keys -t "$SESSION:opencode-plan.1" "$OPENCMD_PLAN" C-m
 tmux new-window -t "$SESSION" -n "opencode-build"
 tmux send-keys -t "$SESSION:opencode-build.1" "$OPENCMD_BUILD" C-m
 
-# Ventana 4: base de datos (si aplica)
+# Ventana 4: OpenCode CLI — modo test (NUEVO)
+tmux new-window -t "$SESSION" -n "opencode-test"
+tmux send-keys -t "$SESSION:opencode-test.1" "$OPENCMD_TEST" C-m
+
+# Ventana 5: VS Code (ajustes finos fuera del vibecoding)
+tmux new-window -t "$SESSION" -n "$PROJECT_TYPE-code"
+tmux send-keys -t "$SESSION:$PROJECT_TYPE-code.1" "code ." C-m
+
+# Ventana 6: base de datos (si aplica)
 if [ -n "$DB_KIND" ]; then
     tmux new-window -t "$SESSION" -n "$DB_KIND"
     if [ "$PROJECT_TYPE" = "astro" ]; then
@@ -441,9 +459,8 @@ if [ -n "$DB_KIND" ]; then
     fi
 fi
 
-# Volver a la ventana de desarrollo y attach
-tmux select-window -t "$SESSION:$PROJECT_TYPE-dev"
-tmux select-pane -t "$SESSION:$PROJECT_TYPE-dev.1"
+# Volver a la ventana de trabajo y attach
+tmux select-window -t "$SESSION:$PROJECT_TYPE-term"
 # Re-ajusta la ventana al tamano real del terminal antes de plegarse
 tmux resize-window -A 2>/dev/null
 
