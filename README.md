@@ -32,7 +32,7 @@ Workflow Stack es un **ecosistema de desarrollo** que organiza tu entorno de tra
 | **agentWorkspace** | Sistema de specs, planes y orquestación multi-area para desarrollo autónomo |
 | **ChiefAgent (Kaspian)** | Orquestador que delega specs a OpenCode y verifica criterios de éxito |
 | **Multi-agent workflow** | Hermes (orquestador) + OpenCode (ejecutor) + agentes especializados |
-| **Skills de Hermes** | organic-routing, auto-memory, sdd-workflow, skill-style-guide, chief-agent |
+| **Skills de Hermes** | organic-routing, auto-memory, sdd-workflow, skill-style-guide, chief-agent, spec-storm |
 | **Memoria persistente** | Session summaries automáticas, contexto cross-session |
 | **Plantillas Obsidian** | Templates por stack (MERN, PERN, MEAN) + proyecto genérico |
 | **Seguridad integrada** | SECURITY-CHECKLIST.md obligatoria (16 items) en cada feature |
