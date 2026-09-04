@@ -433,9 +433,9 @@ case "$PROJECT_TYPE" in
     astro|astro-wp)    DB_KIND="wp" ;;
 esac
 
-# Ventana 1: terminal de trabajo (bash)
-tmux new-session -d -s "$SESSION" -c "$PROJECT_PATH" -n "$PROJECT_TYPE-term"
-tmux send-keys -t "$SESSION:1.1" "bash" C-m
+# Ventana 1: nvim
+tmux new-session -d -s "$SESSION" -c "$PROJECT_PATH" -n "$PROJECT_TYPE-nvim"
+tmux send-keys -t "$SESSION:1.1" "nvim" C-m
 
 # Ventana 2: OpenCode CLI — modo plan
 tmux new-window -t "$SESSION" -n "opencode-plan"
@@ -449,11 +449,7 @@ tmux send-keys -t "$SESSION:opencode-build.1" "$OPENCMD_BUILD" C-m
 tmux new-window -t "$SESSION" -n "opencode-test"
 tmux send-keys -t "$SESSION:opencode-test.1" "$OPENCMD_TEST" C-m
 
-# Ventana 5: VS Code (ajustes finos fuera del vibecoding)
-tmux new-window -t "$SESSION" -n "$PROJECT_TYPE-code"
-tmux send-keys -t "$SESSION:$PROJECT_TYPE-code.1" "code ." C-m
-
-# Ventana 6: base de datos (si aplica)
+# Ventana 5: base de datos (si aplica)
 if [ -n "$DB_KIND" ]; then
     tmux new-window -t "$SESSION" -n "$DB_KIND"
     if [ "$PROJECT_TYPE" = "astro" ]; then

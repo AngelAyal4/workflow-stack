@@ -75,18 +75,17 @@ ws pern cashinsight
 ```
 
 Esto crea y abre automáticamente en la terminal desde la que ejecutaste `ws`:
-- Sesión de tmux con 6 ventanas: terminal, OpenCode plan/build/test, VS Code, DB
+- Sesión de tmux con 5 ventanas: terminal, OpenCode plan/build/test, DB
 - Carpeta `agentWorkspace/` con specs y planes por área (backend, frontend, qa, devops, docs)
 - Proyecto de Hermes Desktop anclado a `PROJECT_PATH`
 
 Ventanas de tmux:
 | Ventana | Contenido |
 |---------|-----------|
-| `*-term` | Terminal bash (git, npm, comandos) |
+| `*-nvim` | Neovim (editor) |
 | `opencode-plan` | OpenCode TUI — plan técnico |
 | `opencode-build` | OpenCode TUI — implementación |
 | `opencode-test` | OpenCode TUI — QA |
-| `*-code` | VS Code (ajustes finos) |
 | `wp`/`mongo`/`postgres` | Base de datos (según stack) |
 
 La ventana de Hermes **no** se crea dentro de tmux: el trabajo con Hermes se hace desde la interfaz Desktop. Para salir del tmux sin cerrar la sesión, usá `Ctrl-b d`. Para volver a entrar manualmente:
