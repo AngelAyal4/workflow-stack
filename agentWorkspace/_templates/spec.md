@@ -34,6 +34,23 @@ estimated_time: [Xm|Xh]
 - [ ] Tests pasan (cobertura >80%)
 - [ ] No hay secrets hardcodeados
 
+## Escenarios (OpenSpec — Given/When/Then)
+
+### Escenario 1: [Nombre del escenario]
+- **Given** [contexto inicial]
+- **When** [acción o evento]
+- **Then** [resultado esperado]
+
+### Escenario 2: [Nombre del escenario]
+- **Given** [contexto inicial]
+- **When** [acción o evento]
+- **Then** [resultado esperado]
+
+## Reglas (RFC 2119)
+- MUST: [regla obligatoria]
+- SHOULD: [regla recomendada]
+- MAY: [regla opcional]
+
 ## Contexto Adicional
 - [Referencias a código existente, modelos, dependencias]
 - [Notas para el ejecutor]
