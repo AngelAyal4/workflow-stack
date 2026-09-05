@@ -1,6 +1,7 @@
 #!/bin/bash
 # start-workspace.sh — Inicia tu entorno de desarrollo completo
 
+WORKFLOW_STACK="${WORKFLOW_STACK:-$HOME/workflow-stack}"
 PROJECT_TYPE=$1
 PROJECT_NAME=$2
 
@@ -362,7 +363,10 @@ EOF
                 mkdir -p "$PROJECT_PATH/agentWorkspace/security/specs"
                 mkdir -p "$PROJECT_PATH/agentWorkspace/security/plans"
         
-                echo "export PROJECT_NAME=\\\"$PROJECT_NAME\\\"" > "$PROJECT_PATH/.envrc"
+                # Estructura OpenSpec
+                mkdir -p "$PROJECT_PATH/openspec/specs"
+                mkdir -p "$PROJECT_PATH/openspec/changes"
+                cp "$WORKFLOW_STACK/openspec/config.yaml" "$PROJECT_PATH/openspec/config.yaml" 2>/dev/null || true
         echo "export PROJECT_TYPE=\"$PROJECT_TYPE\"" >> "$PROJECT_PATH/.envrc"
         echo "export OPENAI_API_KEY=\"not-needed-local\"" >> "$PROJECT_PATH/.envrc"
         echo "export OPENCODE_MODEL=\"llama2-uncensored\"" >> "$PROJECT_PATH/.envrc"

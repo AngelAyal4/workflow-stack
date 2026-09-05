@@ -3,6 +3,7 @@ id: [area]-[feature-name]
 area: [backend|frontend|qa|devops|docs|design-uiux|security]
 depends_on: [[area]-[feature-name], ...]
 estimated_time: [Xm|Xh]
+version: 0.1.0
 ---
 
 # [Título de la funcionalidad]
@@ -36,21 +37,42 @@ estimated_time: [Xm|Xh]
 
 ## Escenarios (OpenSpec — Given/When/Then)
 
-### Escenario 1: [Nombre del escenario]
-- **Given** [contexto inicial]
-- **When** [acción o evento]
-- **Then** [resultado esperado]
+### Escenario 1: [Nombre del escenario - caso feliz]
+- **Given** [contexto inicial completo]
+- **When** [acción o evento específico]
+- **Then** [resultado esperado medible]
 
-### Escenario 2: [Nombre del escenario]
+### Escenario 2: [Nombre del escenario - caso de error]
 - **Given** [contexto inicial]
-- **When** [acción o evento]
-- **Then** [resultado esperado]
+- **When** [acción que produce error]
+- **Then** [resultado esperado: error específico]
+
+### Escenario 3: [Nombre del escenario - edge case]
+- **Given** [contexto límite]
+- **When** [acción en el límite]
+- **Then** [comportamiento esperado]
 
 ## Reglas (RFC 2119)
-- MUST: [regla obligatoria]
-- SHOULD: [regla recomendada]
-- MAY: [regla opcional]
+
+### MUST (Obligatorio)
+- MUST: [regla obligatoria sin excepciones]
+- MUST NOT: [prohibición absoluta]
+
+### SHOULD (Recomendado)
+- SHOULD: [regla recomendada con justificación]
+- SHOULD NOT: [práctica desaconsejada]
+
+### MAY (Opcional)
+- MAY: [regla opcional cuando aplica]
+
+## Tareas (mapeo a plan maestro)
+
+| Tarea | Fase | Dependencias |
+|-------|------|--------------|
+| [Tarea 1] | [Fase] | [specs] |
+| [Tarea 2] | [Fase] | [specs] |
 
 ## Contexto Adicional
 - [Referencias a código existente, modelos, dependencias]
 - [Notas para el ejecutor]
+- [Links a documentación relevante]
