@@ -451,9 +451,9 @@ tmux send-keys -t "$SESSION:opencode-plan.1" "$OPENCMD_PLAN" C-m
 tmux new-window -t "$SESSION" -n "opencode-build"
 tmux send-keys -t "$SESSION:opencode-build.1" "$OPENCMD_BUILD" C-m
 
-# Ventana 4: OpenCode CLI — modo test (NUEVO)
-tmux new-window -t "$SESSION" -n "opencode-test"
-tmux send-keys -t "$SESSION:opencode-test.1" "$OPENCMD_TEST" C-m
+# Ventana 4: OpenCode CLI — modo QA y Security
+tmux new-window -t "$SESSION" -n "opencode-qa"
+tmux send-keys -t "$SESSION:opencode-qa.1" "$OPENCMD_TEST" C-m
 
 # Ventana 5: base de datos (si aplica)
 if [ -n "$DB_KIND" ]; then

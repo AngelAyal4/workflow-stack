@@ -85,7 +85,7 @@ Ventanas de tmux:
 | `*-hermes` | Hermes (chat interactivo) | LongCat 2.0 (Nous, xhigh reasoning) |
 | `opencode-plan` | OpenCode TUI — plan técnico | GLM-5.3-Flash (Go) |
 | `opencode-build` | OpenCode TUI — implementación | DeepSeek V4.1 Flash (Go) |
-| `opencode-test` | OpenCode TUI — QA y Security | Muse Spark 1.3 (Go) |
+| `opencode-qa` | OpenCode TUI — QA y Security | Muse Spark 1.3 (Go) |
 | `wp`/`mongo`/`postgres` | Base de datos (según stack) | — |
 
 La ventana de Hermes **no** se crea dentro de tmux: el trabajo con Hermes se hace desde la interfaz Desktop. Para salir del tmux sin cerrar la sesión, usá `Ctrl-b d`. Para volver a entrar manualmente:
