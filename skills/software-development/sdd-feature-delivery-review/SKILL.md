@@ -156,7 +156,7 @@ build result, audit result, and smoke-test responses.
 
 ## 4. Security and hygiene
 
-- Run the project's `SECURITY-CHECKLIST.md` (workflow-stack, **16 items v2**) with evidence:
+- Run the project's `SECURITY-CHECKLIST.md` (workflow-toolkit, **16 items v2**) with evidence:
   rate limiting on public endpoints (N rapid requests → 429), auth on every private
   route (401 without session), errors shown to users are generic (no stack/DB leaks),
   no secrets in tracked files or git history, `NEXT_PUBLIC_*` only for public values,
@@ -166,7 +166,7 @@ build result, audit result, and smoke-test responses.
   headers (CSP/nosniff/X-Frame-Options/HSTS) present, and 2FA on infra (owner task,
   not code). Mark each item resolved or `N/A — motivo` in the report. Items 11-16 are
   the JUANA IA merge; the 9 ready-to-paste prompts live in
-  `workflow-stack/docs/seguridad-juanaia-prompts.md`.
+  `workflow-toolkit/docs/seguridad-juanaia-prompts.md`.
 - Scan added code for secrets, credentials, unsafe eval, injection, and unsafe file paths.
 - Confirm `.env` is ignored and only placeholders exist in `.env.example`.
 - Tracked direnv files (`.envrc`) commonly survive `.env*` ignore patterns and show up in

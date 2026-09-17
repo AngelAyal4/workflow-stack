@@ -128,7 +128,7 @@ No alcanza con middleware: usá límites **por IP + por usuario** y protección 
 ### 🧠 Capa GEO — citabilidad en motores de IA (agregada 16/08, eGEOagents)
 
 > Complementa el SEO clásico: no solo rankear en Google, sino que **ChatGPT, Perplexity, Gemini y Claude citen la página**.
-> Herramienta: `~/workspace/tools/eGEOagents` (MIT). Prompt: `workflow-stack/prompts/04-geo-optimizer.md`.
+> Herramienta: `~/workspace/tools/eGEOagents` (MIT). Prompt: `workflow-toolkit/prompts/04-geo-optimizer.md`.
 
 | # | Control | Criterio de aceptación | Evidencia mínima |
 |---:|---|---|---|

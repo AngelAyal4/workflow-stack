@@ -1,7 +1,7 @@
 # 🛡️ Prompts de seguridad — JUANA IA (referencia para Review)
 
 > Fuente: "JUANA IA — Serie de Seguridad: 9 correcciones concretas para los fallos de seguridad más comunes en apps vibecodeadas" (`checklist-seguridad-juanaia.pdf`, recibido 16/08).
-> Integrados a la SECURITY-CHECKLIST.md del workflow-stack como items 11-16 (y reforzando 1-10).
+> Integrados a la SECURITY-CHECKLIST.md del workflow-toolkit como items 11-16 (y reforzando 1-10).
 > Uso: en la fase de **Review**, si un proyecto falla en algún item, se puede pasar el prompt correspondiente al ejecutor (opencode build) para que lo corrija.
 > Regla: **revisar siempre el diff antes de aceptar cambios** — pedir que expliquen qué cambiaron y por qué, y probar en staging.
 

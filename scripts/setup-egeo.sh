@@ -1,13 +1,13 @@
 #!/bin/bash
 # setup-egeo.sh — Instala o actualiza eGEOagents (toolkit GEO/AEO, MIT)
 # Uso: bash setup-egeo.sh
-# Instala en ~/workspace/tools/eGEOagents y deja el prompt listo en workflow-stack.
+# Instala en ~/workspace/tools/eGEOagents y deja el prompt listo en workflow-toolkit.
 
 set -e
 
 TOOLS_DIR="$HOME/workspace/tools"
 REPO_DIR="$TOOLS_DIR/eGEOagents"
-WORKFLOW="$HOME/workflow-stack"
+WORKFLOW="$HOME/workflow-toolkit"
 PROMPT_SRC="$REPO_DIR/.claude/commands"
 PROMPT_DST="$WORKFLOW/prompts/04-geo-optimizer.md"
 
@@ -32,7 +32,7 @@ if command -v python3 >/dev/null 2>&1; then
         echo "    ⚠️  Faltan deps (pip install pyyaml jsonschema). La CLI 'egeo' requiere el agente LLM; el flujo normal usa el prompt GEO directamente."
 fi
 
-# 3. Verificar que el prompt GEO del workflow-stack existe (se crea manualmente)
+# 3. Verificar que el prompt GEO del workflow-toolkit existe (se crea manualmente)
 if [ -f "$PROMPT_DST" ]; then
     echo "==> Prompt GEO presente: $PROMPT_DST"
 else
@@ -43,5 +43,5 @@ echo ""
 echo "==> ✅ eGEOagents listo."
 echo "    - Repo:  $REPO_DIR"
 echo "    - CLI:   cd $REPO_DIR && python3 -m egeo --help"
-echo "    - Uso:   pegar workflow-stack/prompts/04-geo-optimizer.md en opencode (agente build/geo)"
+echo "    - Uso:   pegar workflow-toolkit/prompts/04-geo-optimizer.md en opencode (agente build/geo)"
 echo "    - Docs:  $REPO_DIR/docs/getting-started.md"

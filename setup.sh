@@ -4,8 +4,8 @@
 #  Instala y configura TODO el entorno de desarrollo en una sola pasada.
 #
 #  Uso:
-#      git clone https://github.com/AngelAyal4/workflow-stack.git
-#      cd workflow-stack
+#      git clone https://github.com/AngelAyal4/workflow-toolkit.git
+#      cd workflow-toolkit
 #      chmod +x setup.sh
 #      ./setup.sh
 #
@@ -197,17 +197,17 @@ EOF
 # ---------- 8b. Configs de referencia ----------------
 setup_configs() {
     banner "Configs de referencia"
-    mkdir -p "$HOME/workflow-stack-configs"
-    cp "$SCRIPT_DIR/configs/"* "$HOME/workflow-stack-configs/" 2>/dev/null || true
-    green "  ✓ ejemplos guardados en ~/workflow-stack-configs (bashrc, opencode, envrc)"
+    mkdir -p "$HOME/workflow-toolkit-configs"
+    cp "$SCRIPT_DIR/configs/"* "$HOME/workflow-toolkit-configs/" 2>/dev/null || true
+    green "  ✓ ejemplos guardados en ~/workflow-toolkit-configs (bashrc, opencode, envrc)"
 }
 
 # ---------- 8c. Documentación ----------------
 setup_docs() {
     banner "Documentación"
-    mkdir -p "$HOME/workflow-stack-configs/docs"
-    cp "$SCRIPT_DIR/docs/"* "$HOME/workflow-stack-configs/docs/" 2>/dev/null || true
-    green "  ✓ documentación copiada a ~/workflow-stack-configs/docs"
+    mkdir -p "$HOME/workflow-toolkit-configs/docs"
+    cp "$SCRIPT_DIR/docs/"* "$HOME/workflow-toolkit-configs/docs/" 2>/dev/null || true
+    green "  ✓ documentación copiada a ~/workflow-toolkit-configs/docs"
 }
 
 # ---------- 9. Cron: backup diario del vault -------------------
@@ -247,7 +247,7 @@ setup_skills() {
 # MAIN
 # ==================================================================
 banner "Workflow Stack Bootstrap"
-echo "     Repo: https://github.com/AngelAyal4/workflow-stack"
+echo "     Repo: https://github.com/AngelAyal4/workflow-toolkit"
 echo "     Distro: $(uname -s) $(uname -m)"
 echo ""
 

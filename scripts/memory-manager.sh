@@ -6,7 +6,7 @@ set -euo pipefail
 
 # Configuración
 MEMORY_DIR="${MEMORY_DIR:-./memory}"
-GLOBAL_MEMORY_DIR="${HOME}/.config/workflow-stack/memory/global"
+GLOBAL_MEMORY_DIR="${HOME}/.config/workflow-toolkit/memory/global"
 MAX_MEMORY_AGE_DAYS="${MAX_MEMORY_AGE_DAYS:-90}"
 MAX_MEMORY_INDEX_LINES=200
 

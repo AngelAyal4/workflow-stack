@@ -1,7 +1,7 @@
 #!/bin/bash
 # start-workspace.sh — Inicia tu entorno de desarrollo completo
 
-WORKFLOW_STACK="${WORKFLOW_STACK:-$HOME/workflow-stack}"
+WORKFLOW_STACK="${WORKFLOW_STACK:-$HOME/workflow-toolkit}"
 PROJECT_TYPE=$1
 PROJECT_NAME=$2
 

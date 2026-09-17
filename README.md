@@ -4,8 +4,8 @@
 
 **Entorno de desarrollo full-stack con especificaciones, agentes de IA y memoria persistente.**
 
-[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-949494)](https://github.com/AngelAyal4/workflow-stack)
-[![Shell](https://img.shields.io/badge/shell-bash%20%7C%20zsh-4EAA25)](https://github.com/AngelAyal4/workflow-stack)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-949494)](https://github.com/AngelAyal4/workflow-toolkit)
+[![Shell](https://img.shields.io/badge/shell-bash%20%7C%20zsh-4EAA25)](https://github.com/AngelAyal4/workflow-toolkit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 [Quickstart](#quickstart) • [Cómo se usa](#cómo-se-usa) • [Estructura](#estructura-del-repo) • [Integraciones](#integraciones) • [Contributing](#contributing)
@@ -46,8 +46,8 @@ Workflow Stack es un **ecosistema de desarrollo** que organiza tu entorno de tra
 ### Instalación (nueva máquina)
 
 ```bash
-git clone https://github.com/AngelAyal4/workflow-stack.git
-cd workflow-stack
+git clone https://github.com/AngelAyal4/workflow-toolkit.git
+cd workflow-toolkit
 chmod +x setup.sh
 ./setup.sh
 ```
@@ -161,7 +161,7 @@ Las skills se cargan automáticamente en cada sesión de Hermes:
 ## Estructura del repo
 
 ```
-workflow-stack/
+workflow-toolkit/
 ├── agentWorkspace/              # Templates de specs y planes (NO es un proyecto real)
 │   ├── _templates/              # Templates base (spec.md, plan.md)
 │   ├── _master/                 # (vacío, se llena al crear proyecto)

@@ -15,11 +15,11 @@
 #      con prompts/corrector.md + el reporte → vuelve a testear
 #   4. Hasta --max-iter iteraciones o aprobación
 #
-# Requisitos: opencode CLI instalado (opencode run), prompts en ~/workflow-stack/prompts/
+# Requisitos: opencode CLI instalado (opencode run), prompts en ~/workflow-toolkit/prompts/
 
 set -euo pipefail
 
-WORKFLOW="${WORKFLOW_STACK:-$HOME/workflow-stack}"
+WORKFLOW="${WORKFLOW_STACK:-$HOME/workflow-toolkit}"
 PROMPTS_DIR="$WORKFLOW/prompts"
 TESTER_PROMPT="$PROMPTS_DIR/testeador.md"
 CORRECTOR_PROMPT="$PROMPTS_DIR/corrector.md"
