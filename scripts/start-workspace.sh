@@ -426,20 +426,22 @@ tmux has-session -t "$SESSION" 2>/dev/null && tmux kill-session -t "$SESSION"
 OPENCMD_BASE="opencode"
 DB_KIND=""
 case "$PROJECT_TYPE" in
-    mern|mern-nextjs|pern-nextjs|astro) OPENCMD_BASE="opencode -m ollama/llama2-uncensored" ;;
+    mern|mern-nextjs|pern-nextjs|astro) OPENCMD_BASE="opencode" ;;
 esac
-OPENCMD_PLAN="$OPENCMD_BASE --agent plan ."
-OPENCMD_BUILD="$OPENCMD_BASE --agent build ."
-OPENCMD_TEST="$OPENCMD_BASE --agent test ."
+
+# Modelos por agente (OpenCode Go)
+OPENCMD_PLAN="$OPENCMD_BASE --model zhipu/glm-5.3-flash --agent plan ."
+OPENCMD_BUILD="$OPENCMD_BASE --model deepseek/deepseek-v4-1-flash --agent build ."
+OPENCMD_TEST="$OPENCMD_BASE --model meta/muse-spark-1.3-contributor --agent test ."
 case "$PROJECT_TYPE" in
     mern|mern-nextjs)  DB_KIND="mongo" ;;
     pern|pern-nextjs)  DB_KIND="postgres" ;;
     astro|astro-wp)    DB_KIND="wp" ;;
 esac
 
-# Ventana 1: nvim
-tmux new-session -d -s "$SESSION" -c "$PROJECT_PATH" -n "$PROJECT_TYPE-nvim"
-tmux send-keys -t "$SESSION:1.1" "nvim" C-m
+# Ventana 1: Hermes (chat interactivo en directorio del proyecto)
+tmux new-session -d -s "$SESSION" -c "$PROJECT_PATH" -n "$PROJECT_TYPE-hermes"
+tmux send-keys -t "$SESSION:1.1" "cd $PROJECT_PATH && hermes chat --in $PROJECT_PATH --model meituan/longcat-2.0:free --reasoning xhigh" C-m
 
 # Ventana 2: OpenCode CLI — modo plan
 tmux new-window -t "$SESSION" -n "opencode-plan"
@@ -463,8 +465,8 @@ if [ -n "$DB_KIND" ]; then
     fi
 fi
 
-# Volver a la ventana de trabajo y attach
-tmux select-window -t "$SESSION:$PROJECT_TYPE-term"
+# Volver a la ventana de hermes y attach
+tmux select-window -t "$SESSION:$PROJECT_TYPE-hermes"
 # Re-ajusta la ventana al tamano real del terminal antes de plegarse
 tmux resize-window -A 2>/dev/null
 

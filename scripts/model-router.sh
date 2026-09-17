@@ -4,30 +4,23 @@
 
 set -euo pipefail
 
-# Configuración de modelos por tarea
-declare -A MODELS_BRAINSTORM=(
-    ["opencode"]="muse-spark-1.2"
-    ["nous"]="meituan/longcat-2.0:free"
-    ["local"]="ollama/qwen3.5:27b"
-)
+# Modelos por tarea (OpenCode Go)
+MODELS_PLAN="zhipu/glm-5.3-flash"
+MODELS_BUILD="deepseek/deepseek-v4-1-flash"
+MODELS_TEST="meta/muse-spark-1.3-contributor"
 
-declare -A MODELS_PLAN=(
-    ["opencode"]="glm-5.3-flash"
-    ["nous"]="stepfun/step-3.7-flash:free"
-    ["local"]="ollama/deepseek-v4-flash"
-)
+# Modelos por tarea (Nous Portal - free)
+MODELS_NOUS_PLAN="stepfun/step-3.7-flash:free"
+MODELS_NOUS_BUILD="poolside/laguna-xs-2.1:free"
+MODELS_NOUS_TEST="ling-3.0-flash-fin:free"
 
-declare -A MODELS_BUILD=(
-    ["opencode"]="deepseek-v4-flash"
-    ["nous"]="poolside/laguna-xs-2.1:free"
-    ["local"]="ollama/llama2-uncensored"
-)
+# Modelos por tarea (Local - Ollama)
+MODELS_LOCAL_PLAN="ollama/deepseek-v4-flash"
+MODELS_LOCAL_BUILD="ollama/llama2-uncensored"
+MODELS_LOCAL_TEST="ollama/llama2-uncensored"
 
-declare -A MODELS_TEST=(
-    ["opencode"]="qwen3.8-flash"
-    ["nous"]="ling-3.0-flash-fin:free"
-    ["local"]="ollama/llama2-uncensored"
-)
+# Modelo para Hermes (Kaspian)
+MODEL_HERMES="meituan/longcat-2.0:free"
 
 # Función: verificar si OpenCode Go está disponible
 check_opencode_go() {
