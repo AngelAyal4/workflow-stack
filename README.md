@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 Workflow Stack
+# 🚀 Workflow Toolkit
 
 **Entorno de desarrollo full-stack con especificaciones, agentes de IA y memoria persistente.**
 
