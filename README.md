@@ -16,7 +16,7 @@
 
 ## ¿Qué es?
 
-Workflow Stack es un **ecosistema de desarrollo** que organiza tu entorno de trabajo completo en un solo repositorio: configuraciones, scripts, plantillas, skills de IA y flujos de trabajo. Está diseñado para que puedas bootstrapear una máquina nueva en minutos y mantener la consistencia entre entornos.
+Workflow Toolkit es un **ecosistema de desarrollo** que organiza tu entorno de trabajo completo en un solo repositorio: configuraciones, scripts, plantillas, skills de IA y flujos de trabajo. Está diseñado para que puedas bootstrapear una máquina nueva en minutos y mantener la consistencia entre entornos.
 
 **Antes:** Configuraciones dispersas, aliases perdidos, cada proyecto empieza de cero, sin memoria entre sesiones.
 
@@ -31,7 +31,7 @@ Workflow Stack es un **ecosistema de desarrollo** que organiza tu entorno de tra
 | **Bootstrap en una pasada** | `./setup.sh` instala y configura todo el entorno |
 | **agentWorkspace** | Sistema de specs, planes y orquestación multi-area para desarrollo autónomo |
 | **ChiefAgent (Kaspian)** | Orquestador que delega specs a OpenCode y verifica criterios de éxito |
-| **Multi-agent workflow** | Hermes (orquestador) + OpenCode (ejecutor) + agentes especializados |
+| **Multi-agent workflow** | Hermes (main specs) + OpenCode (plan-build-qa) + agentes especializados |
 | **Skills de Hermes** | organic-routing, auto-memory, sdd-workflow, skill-style-guide, chief-agent, spec-storm |
 | **Memoria persistente** | Session summaries automáticas, contexto cross-session |
 | **Plantillas Obsidian** | Templates por stack (MERN, PERN, MEAN) + proyecto genérico |
